@@ -5,9 +5,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -16,7 +13,7 @@ import java.util.Properties;
  * Created by Z先生 on 2016/10/24.
  */
 @Configuration
-public class MybatisConfig implements TransactionManagementConfigurer{
+public class MybatisConfig{
 
     @Autowired
     DataSource dataSource;
@@ -34,7 +31,4 @@ public class MybatisConfig implements TransactionManagementConfigurer{
         return pageHelper;
     }
 
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return new DataSourceTransactionManager(dataSource);
-    }
 }
