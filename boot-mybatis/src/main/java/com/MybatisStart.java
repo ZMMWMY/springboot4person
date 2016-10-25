@@ -11,7 +11,9 @@ import org.springframework.web.servlet.DispatcherServlet;
 /**
  * Created by Z先生 on 2016/10/24.
  */
-@MapperScan("com.dao")
+//Spring boot   MybatisAutoConfiguration.class @PostConstruct在运行的时候会进行自动配置 sqlSessionFactory和 SqlSessionTemplate
+//@MapperScan  加载sqlSessionFactory和 SqlSessionTemplate
+@MapperScan("com.dao")//或者是在Dao层注解@Mapper
 @SpringBootApplication
 @EnableTransactionManagement
 public class MybatisStart {
