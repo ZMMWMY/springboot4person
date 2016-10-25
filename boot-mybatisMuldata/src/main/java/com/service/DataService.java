@@ -29,6 +29,7 @@ public class DataService {
     }
 
     public Integer maxNum(){
+        orderMapper.maxId();
         return userMapper.maxId();
     }
 

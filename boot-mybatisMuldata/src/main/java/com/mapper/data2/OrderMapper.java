@@ -14,4 +14,7 @@ public interface OrderMapper {
 
     @Insert("insert into t_order (code)   values(#{code})")
     boolean insertOrder(Order order);
+
+   // @Select("select max(id) from t_order")
+    Integer maxId();
 }

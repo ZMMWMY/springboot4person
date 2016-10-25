@@ -38,7 +38,7 @@ public class DataSource1Config {
         sqlSessionFactoryBean.setTypeAliasesPackage("com.domain.domain1");
 
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mybatis/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mybatis/data1/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 }

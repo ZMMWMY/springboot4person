@@ -32,6 +32,7 @@ public class IndexController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Integer test() {
+//        System.out.println("****************************");
         return dataService.maxNum();
     }
 }
