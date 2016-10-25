@@ -11,6 +11,7 @@
     <modules>
         <module>boot-redis</module>
         <module>boot-mybatis</module>
+        <module>boot-mybatisMuldata</module>
     </modules>
 
     <properties>

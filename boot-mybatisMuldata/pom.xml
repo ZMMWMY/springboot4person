@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>boot-mybatis</artifactId>
+    <artifactId>boot-mybatisMuldata</artifactId>
 
     <dependencies>
         <dependency>
@@ -55,13 +55,4 @@
             <!-- 版本号可以不用指定，Spring Boot会选用合适的版本 -->
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

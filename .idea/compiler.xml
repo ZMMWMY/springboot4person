@@ -23,11 +23,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="boot-mybatis" />
+        <module name="boot-mybatisMuldata" />
         <module name="boot-redis" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="boot-mybatis" target="1.5" />
+      <module name="boot-mybatisMuldata" target="1.5" />
       <module name="boot-redis" target="1.5" />
       <module name="springboot" target="1.5" />
     </bytecodeTargetLevel>
