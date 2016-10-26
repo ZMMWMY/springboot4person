@@ -21,7 +21,7 @@ public class MyDataRunner implements CommandLineRunner{
     UserService userService;
 
     public void run(String... strings) throws Exception {
-        System.out.println(1);
-        System.out.println(JSON.toJSON(userService.getAllUser()));
+        System.out.println("1111111111111111111111111111111111");
+    //    System.out.println(JSON.toJSON(userService.getAllUser(1,1)));
     }
 }
