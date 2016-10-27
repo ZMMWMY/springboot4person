@@ -12,6 +12,8 @@ import java.io.IOException;
 @Component
 public class Consumer {
 
+
+    //监听这个queue  消费者
     @JmsListener(destination = "myqueue")
     public void receiveQueue(String text) throws IOException {
         System.out.println(text);

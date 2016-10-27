@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
  */
 @Component
 @EnableScheduling
+//在启动的时候跑一次   可删除这个实现
 public class Producer implements CommandLineRunner{
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -28,7 +29,7 @@ public class Producer implements CommandLineRunner{
 
     final ExecutorService pushExecutor = Executors.newFixedThreadPool(10);
 
-
+    //用线程池来发送消息
     void push(Object info){
         pushExecutor.execute(new Runnable() {
             public void run() {
@@ -41,7 +42,9 @@ public class Producer implements CommandLineRunner{
         push(null);
     }
 
-//    @Scheduled(fixedDelay=3000)//每3s执行1次
+
+    //定时器   可删除
+    @Scheduled(fixedDelay=3000)//每3s执行1次
     public void send() {
         this.jmsTemplate.convertAndSend(this.queue, "hi,activeMQ");
     }
