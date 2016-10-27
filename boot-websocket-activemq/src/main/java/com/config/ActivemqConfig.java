@@ -9,6 +9,7 @@ import javax.jms.Queue;
 /**
  * Created by Z先生 on 2016/10/27.
  */
+//使用的是内置的activemq
 @Configuration
 public class ActivemqConfig {
 
