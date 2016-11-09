@@ -41,7 +41,19 @@ public class UploadController {
             return "文件不存在";
         } catch (IOException e) {
             return "发生异常";
+        } catch (Exception e){
+            return "。。。";
         }
+        return "SUCCESS";
+    }
+
+
+    @RequestMapping(value = "/upload3",method = RequestMethod.POST)
+    public String upload2( ){
+        if(1==1){
+            throw new RuntimeException("");
+        }
+
         return "SUCCESS";
     }
 }
