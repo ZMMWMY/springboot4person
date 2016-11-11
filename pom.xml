@@ -12,6 +12,11 @@
         <module>boot-redis</module>
         <module>boot-mybatis</module>
         <module>boot-mybatisMuldata</module>
+        <module>boot-websocket</module>
+        <module>boot-websocket-activemq</module>
+        <!--<module>boot-dubbox</module>-->
+        <module>boot-dubbo</module>
+        <module>boot-upload</module>
     </modules>
 
     <properties>
