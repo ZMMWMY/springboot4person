@@ -12,9 +12,10 @@ import java.util.List;
 /**
  * Created by Z先生 on 2016/11/19.
  */
-public class SecuriryDataService  implements UserDetailsService {
+public class SecurityDataService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //模拟一个从数据库取出来的User
         User user=new User();
         user.setRole(User.ROLE.admin);
         user.setUsername(username);

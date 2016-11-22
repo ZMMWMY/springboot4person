@@ -37,13 +37,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         //为单个用户设定了储存在内存中的用户名和密码和角色
-        auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");
+       /* auth.inMemoryAuthentication()
+                .withUser("user").password("password").roles("USER");*/
         auth.userDetailsService(userDetailsService());
     }
 
     @Bean
     protected UserDetailsService userDetailsService() {
-        return new SecuriryDataService();
+        return new SecurityDataService();
     }
 }
