@@ -1,0 +1,11 @@
+fdfs:
+  soTimeout: 1500
+  connectTimeout: 600
+  thumbImage:
+    width: 150
+    height: 150
+  trackerList:
+    - 192.168.174.128:22122
+spring:
+  jmx:
+    enabled: false
