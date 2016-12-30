@@ -2,6 +2,7 @@ package com.fastdfs.web;
 
 import com.fastdfs.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,11 @@ public class TestController {
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public String upload(MultipartFile file) throws IOException {
         return fastdfsUtil.uploadFile(file);
+    }
+
+    @GetMapping(value = "/hello-docker")
+    public String docker(){
+        return "hello-docker";
     }
 
 
