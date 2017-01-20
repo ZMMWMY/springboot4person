@@ -22,4 +22,7 @@ spring:
     testWhileIdle: true #建议配置为true，不影响性能，并且保证安全性
     testOnBorrow: false
     testOnReturn: false
-
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mrz.mybatis.again.model
