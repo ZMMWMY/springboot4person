@@ -34,14 +34,14 @@ public class ImgPipeline extends FilePersistentBase implements Pipeline {
         String imgName = resultItems.get("imgName");
         try {
             UUID.randomUUID().toString();
-            FileOutputStream fout =new FileOutputStream(getFile(this.path));
+            FileOutputStream fout = new FileOutputStream(getFile(this.path));
             try {
                 URL url = new URL(imgStr);
                 DataInputStream in = new DataInputStream(url.openStream());
-                byte [] tmp = new byte[1024];
+                byte[] tmp = new byte[1024];
                 int l = -1;
-                while ((l = in.read(tmp)) != -1){
-                    fout.write(tmp , 0 ,l );
+                while ((l = in.read(tmp)) != -1) {
+                    fout.write(tmp, 0, l);
                 }
                 fout.flush();
                 fout.close();
