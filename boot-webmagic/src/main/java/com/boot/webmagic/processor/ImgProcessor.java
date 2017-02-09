@@ -1,13 +1,14 @@
-package com.boot.webmagic.common;
+package com.boot.webmagic.processor;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 /**
- * Created by Z先生 on 2017/2/8.
+ * Created by Z先生 on 2017/2/9.
  */
-public class ImagePageProcesser implements PageProcessor {
+public class ImgProcessor implements PageProcessor{
+
     @Override
     public void process(Page page) {
 
