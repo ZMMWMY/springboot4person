@@ -1,5 +1,12 @@
 package com.boot.webmagic.pipeline;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
@@ -11,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,37 +38,39 @@ public class ImgPipeline extends FilePersistentBase implements Pipeline {
     }
 
     public void process(ResultItems resultItems, Task task) {
-        String imgStr = resultItems.get("img");
-       // String imgName = resultItems.get("imgName");
-        File dir = new File(this.path);
-        if(!dir.isDirectory()){
-            dir.mkdir();
-        }
-        try {
-            FileOutputStream fout = new FileOutputStream(getFile(this.path+UUID.randomUUID().toString()+".jpg"));
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        List<String> list = resultItems.get("imgStr");
+        for (String imgStr : list) {
+            File dir = new File(this.path);
+            if (!dir.isDirectory()) {
+                dir.mkdir();
+            }
             try {
-                URL url = new URL(imgStr);
-                DataInputStream in = new DataInputStream(url.openStream());
-                byte[] tmp = new byte[1024];
-                int l = -1;
-                while ((l = in.read(tmp)) != -1) {
-                    fout.write(tmp, 0, l);
+                FileOutputStream fout = new FileOutputStream(getFile(this.path+"\\" + UUID.randomUUID().toString() + ".jpg"));
+                try {
+                    HttpGet get = new HttpGet(imgStr);
+                    get.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+
+                    HttpResponse response = httpclient.execute(get);
+                    HttpEntity entity = response.getEntity();
+                   // URL url = new URL(imgStr);
+                    DataInputStream in = new DataInputStream(entity.getContent());
+                    byte[] tmp = new byte[1024];
+                    int l = -1;
+                    while ((l = in.read(tmp)) != -1) {
+                        fout.write(tmp, 0, l);
+                    }
+                    fout.flush();
+                    fout.close();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                fout.flush();
-                fout.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
-
     }
 
-    public static void main(String[] args) {
-        File file =new File("d:\\test");
-        System.out.println(file.isDirectory());
-    }
 }
