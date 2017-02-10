@@ -40,21 +40,26 @@ public class ImgPipeline extends FilePersistentBase implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         List<String> list = resultItems.get("imgStr");
+        String fileName = resultItems.get("imgName");
         for (String imgStr : list) {
             File dir = new File(this.path);
             if (!dir.isDirectory()) {
                 dir.mkdir();
             }
+
+            File imgDir = new File(this.path+File.separator + fileName);
+            if(!imgDir.exists()){
+                imgDir.mkdir();
+            }
             try {
-                FileOutputStream fout = new FileOutputStream(getFile(this.path+"\\" + UUID.randomUUID().toString() + ".jpg"));
+                FileOutputStream fout = new FileOutputStream(getFile(imgDir+"\\" + UUID.randomUUID().toString() + ".jpg"));
                 try {
                     HttpGet get = new HttpGet(imgStr);
                     get.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
-
                     HttpResponse response = httpclient.execute(get);
                     HttpEntity entity = response.getEntity();
-                   // URL url = new URL(imgStr);
                     DataInputStream in = new DataInputStream(entity.getContent());
+
                     byte[] tmp = new byte[1024];
                     int l = -1;
                     while ((l = in.read(tmp)) != -1) {
@@ -73,4 +78,11 @@ public class ImgPipeline extends FilePersistentBase implements Pipeline {
         }
     }
 
+    public static void main(String[] args) {
+        String s = "e:\\webmagic"+File.separator+"妹子";
+        File file = new File(s);
+        if (!file.exists()){
+            file.mkdir();
+        }
+    }
 }
