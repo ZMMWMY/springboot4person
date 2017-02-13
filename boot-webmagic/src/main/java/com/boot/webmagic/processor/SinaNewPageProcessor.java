@@ -43,6 +43,7 @@ public class SinaNewPageProcessor implements PageProcessor {
                 }
             }*/
           //指定group 原来，group是针对（）来说的，group（0）就是指的整个串，group（1） 指的是第一个括号里的东西，group（2）指的第二个括号里的东西
+            // 另外 matcher().match() 和 find() 函数是有区别的, 返回值也有区别, 因此才有的group()函数
           List list = page.getHtml().links().regex(newsInfoRegex,0).all();
             page.addTargetRequests(list);
             page.addTargetRequests(page.getHtml().links().regex(newsListRegex).all());
