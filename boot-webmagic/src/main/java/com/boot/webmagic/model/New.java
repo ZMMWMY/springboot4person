@@ -61,4 +61,14 @@ public class New {
     public void setSource(String source) {
         this.source = source;
     }
+
+    public New( String title, String url, Date pubDate, String source) {
+        this.title = title;
+        this.url = url;
+        this.pubDate = pubDate;
+        this.source = source;
+    }
+
+    public New() {
+    }
 }

@@ -1,5 +1,6 @@
 package com.boot.webmagic.processor;
 
+import com.boot.webmagic.model.New;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -25,8 +26,8 @@ public class SinaNewPageProcessor implements PageProcessor {
     private String newsListRegex = "^http:\\/\\/news.sina.com.cn/(\\w+)*\\/$";
 
 
-    public boolean mather(String str){
-        Pattern pattern =Pattern.compile(newsInfoRegex,34);
+    public boolean mather(String str) {
+        Pattern pattern = Pattern.compile(newsInfoRegex, 34);
         Matcher m = pattern.matcher(str);
         return m.matches();
     }
@@ -42,26 +43,25 @@ public class SinaNewPageProcessor implements PageProcessor {
                     list2.add(str);
                 }
             }*/
-          //指定group 原来，group是针对（）来说的，group（0）就是指的整个串，group（1） 指的是第一个括号里的东西，group（2）指的第二个括号里的东西
+            //指定group 原来，group是针对（）来说的，group（0）就是指的整个串，group（1） 指的是第一个括号里的东西，group（2）指的第二个括号里的东西
             // 另外 matcher().match() 和 find() 函数是有区别的, 返回值也有区别, 因此才有的group()函数
-          List list = page.getHtml().links().regex(newsInfoRegex,0).all();
+            List list = page.getHtml().links().regex(newsInfoRegex, 0).all();
             page.addTargetRequests(list);
             page.addTargetRequests(page.getHtml().links().regex(newsListRegex).all());
-        } else  if (page.getUrl().regex(newsInfoRegex).match()){
-            String title = page.getHtml().xpath("//div[@id=\"artibodyTitle\"]/h1/text()").toString();
+        } else if (page.getUrl().regex(newsInfoRegex).match()) {
+            String title = page.getHtml().xpath("//*[@id=\"artibodyTitle\"]/text()").toString();
             List<String> contents = page.getHtml().xpath("//div[@id=\"artibody\"]/p").all();
-            String time = page.getHtml().xpath("//div[@id=\"navtimeSource\"]/span").get();
-            String source =  page.getHtml().xpath("//*[@id=\"navtimeSource\"]/span/span/a").get();
+            String time = page.getHtml().xpath("//*[@id=\"navtimeSource\"]/text()").get();
+            String source = page.getHtml().xpath("//*[@id=\"navtimeSource\"]/span/span/a/text()").get();
+            String url = page.getUrl().toString();
         }
     }
-
 
 
     @Override
     public Site getSite() {
         return site;
     }
-
 
 
     public static void main(String[] args) {
