@@ -17,6 +17,13 @@
         <!--<module>boot-dubbox</module>-->
         <module>boot-dubbo</module>
         <module>boot-upload</module>
+        <module>boot-start</module>
+        <module>boot-security</module>
+        <module>boot-jersey</module>
+        <module>boot-fastdfs</module>
+        <module>boot-mybatis-again</module>
+        <module>boot-webmagic</module>
+        <module>boot-elasticsearch</module>
     </modules>
 
     <properties>
@@ -34,4 +41,42 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.fastdfs.FastdfsStart</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        <!--    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+            </plugin>
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+
+            </plugin>-->
+        </plugins>
+    </build>
 </project>
