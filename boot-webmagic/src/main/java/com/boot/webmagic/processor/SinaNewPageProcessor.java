@@ -5,6 +5,7 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,14 +22,27 @@ public class SinaNewPageProcessor implements PageProcessor {
     private String newsInfoRegex = "http:\\/\\/news.sina.com.cn(\\/\\w+)*\\/\\d{4}-\\d{2}-\\d{2}\\/doc-\\w*\\d*.shtml";
 
 
-    private String newsListRegex = "http:\\/\\/news.sina.com.cn/(\\w+)*\\/";
+    private String newsListRegex = "^http:\\/\\/news.sina.com.cn/(\\w+)*\\/$";
 
+
+    public boolean mather(String str){
+        Pattern pattern =Pattern.compile(newsInfoRegex,34);
+        Matcher m = pattern.matcher(str);
+        return m.matches();
+    }
 
     @Override
     public void process(Page page) {
-        //TODO 不知为何爬到的网址不正常 比如爬到/zx
+
         if (page.getUrl().regex(newsListRegex).match()) {
-            List list = page.getHtml().links().regex(newsInfoRegex).all();
+          /*  List<String> list1 = page.getHtml().links().all();
+            List<String> list2 = new ArrayList<>();
+            for (String str:list1) {
+                if(mather(str)){
+                    list2.add(str);
+                }
+            }*/
+          List list = page.getHtml().links().regex(newsInfoRegex,0).all();
             page.addTargetRequests(list);
             page.addTargetRequests(page.getHtml().links().regex(newsListRegex).all());
         } else  if (page.getUrl().regex(newsInfoRegex).match()){
@@ -39,10 +53,14 @@ public class SinaNewPageProcessor implements PageProcessor {
         }
     }
 
+
+
     @Override
     public Site getSite() {
         return site;
     }
+
+
 
     public static void main(String[] args) {
         Spider.create(new SinaNewPageProcessor()).addUrl("http://news.sina.com.cn/world/").thread(5).run();
