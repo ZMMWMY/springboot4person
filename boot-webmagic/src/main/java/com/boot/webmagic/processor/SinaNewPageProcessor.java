@@ -42,6 +42,7 @@ public class SinaNewPageProcessor implements PageProcessor {
                     list2.add(str);
                 }
             }*/
+          //指定group 原来，group是针对（）来说的，group（0）就是指的整个串，group（1） 指的是第一个括号里的东西，group（2）指的第二个括号里的东西
           List list = page.getHtml().links().regex(newsInfoRegex,0).all();
             page.addTargetRequests(list);
             page.addTargetRequests(page.getHtml().links().regex(newsListRegex).all());
