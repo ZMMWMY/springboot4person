@@ -14,9 +14,9 @@ public class RedisStart {
     }
 
 
-    public boolean acquireLock(String lockkey, int expired) {
+  /*  public boolean acquireLock(String lockkey, int expired) {
         Jedis jedis = null;
-       /* try {
+       *//* try {
             jedis = pool.getResource();
             long value = System.currentTimeMillis() + expired + 1;
             // 1. 通过SETNX试图获取一个lock
@@ -45,7 +45,7 @@ public class RedisStart {
             if (jedis != null) {
                 jedis.close();
             }
-        }*/
+        }*//*
         return true;
-    }
+    }*/
 }
