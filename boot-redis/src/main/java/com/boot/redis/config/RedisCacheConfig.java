@@ -25,15 +25,17 @@ import java.util.Map;
  */
 @Configuration
 @EnableCaching
-public class JedisConfig extends CachingConfigurerSupport{
+public class RedisCacheConfig extends CachingConfigurerSupport{
 
 
 
     /**
-     * 生成key的策略
      *
+     * 生成key的策略
+     * 实现自定义生成key策略,不需要为@Cacheeable 指定一个不同的键
      * @return
-     */
+     *//*
+     * */
     @Bean
     public KeyGenerator keyGenerator() {
         return new KeyGenerator() {
@@ -44,12 +46,19 @@ public class JedisConfig extends CachingConfigurerSupport{
                 for (Object obj : params) {
                     sb.append(obj.toString());
                 }
+                System.out.println(sb.toString());
                 return sb.toString();
             }
         };
     }
     /**
-     * RedisTemplate配置
+     * RedisTemplate配置 基础配置 ,
+     * you'll want to annotate one of your configuration classes with the @EnableCaching annotation and expose a CacheManager bean.
+     * You'll also need a connection factory and a RedisTemplate bean for Spring to communicate with your Redis database
+     *
+     *
+     * 另外  设置缓存对象的序列化方式,不设置会报错
+     * 另外对于json序列化,对象要提供默认空构造器
      * @param factory
      * @return
      */
@@ -57,17 +66,21 @@ public class JedisConfig extends CachingConfigurerSupport{
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate template = new StringRedisTemplate(factory);
 
-     /*   Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         template.setValueSerializer(jackson2JsonRedisSerializer);
-        template.afterPropertiesSet();*/
+        template.afterPropertiesSet();
         return template;
     }
 
-    //配置RedisCacheManager对象。RedisCacheManager用于告诉spring boot将使用redis作为系统的缓存。
+
+    /**
+    * 基础配置
+    * 配置RedisCacheManager对象。RedisCacheManager用于告诉spring boot将使用redis作为系统的缓存。
+    * */
     @Bean
     CacheManager redisCacheManager(RedisTemplate<String, String> redisTemplate) {
         return new RedisCacheManager(redisTemplate);

@@ -1,6 +1,7 @@
 package com.boot.redis;
 
-import com.boot.redis.config.RedisCache;
+import com.boot.redis.config.CacheTest;
+import com.boot.redis.config.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class RedisCacheTest {
 
     @Autowired
-    RedisCache redisCache;
+    CacheTest cacheTest;
 
     @Test
     public void test1(){
-        redisCache.getStr();
-        redisCache.getStr();
+        User user = new User();
+        user.setId(1);
+        cacheTest.test2(user);
+        cacheTest.test2(user);
     }
 }
