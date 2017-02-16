@@ -1,13 +1,28 @@
 package com.boot.redis.config;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Z先生 on 2017/2/16.
  */
 @Component
 public class CacheTest {
+    private static List<User> list = new ArrayList<User>();
+
+    static {
+        User user =new User(1,"wmy");
+        User user1 =new User(2,"wmyzmm");
+        User user2 =new User(3,"zmm");
+        list.add(user);
+        list.add(user1);
+        list.add(user2);
+    }
 
 
     /**
@@ -32,5 +47,26 @@ public class CacheTest {
     public User test2(User user){
         System.out.println("3333");
         return new User();
+    }
+
+    @Cacheable(value = "user")
+    public User getUser(Integer id){
+        System.out.println("这不是缓存哦");
+        return list.get(id);
+    }
+
+    @CachePut(value = "user")
+    public User updateUser(User user){
+        User user1=list.get(user.getId());
+        user1.setName("mwz");
+        return user1;
+    }
+
+    @CachePut(value = "user")
+    public User updateUser(Integer io){
+        User user1=list.get(io);
+        user1.setName("mwz");
+        System.out.println(list.get(io).getName());
+        return user1;
     }
 }

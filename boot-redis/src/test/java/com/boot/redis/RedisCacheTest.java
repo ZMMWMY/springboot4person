@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -24,5 +25,16 @@ public class RedisCacheTest {
         user.setId(1);
         cacheTest.test2(user);
         cacheTest.test2(user);
+    }
+
+
+    @Test
+    public void test2(){
+        User xx = null;
+        xx=cacheTest.getUser(1);
+        User user = new User();
+        user.setId(1);
+        xx=cacheTest.updateUser(1);
+        System.out.println(cacheTest.getUser(1).getName());
     }
 }
