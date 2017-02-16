@@ -69,4 +69,19 @@ public class CacheTest {
         System.out.println(list.get(io).getName());
         return user1;
     }
+
+
+    @Cacheable(value = "common",key = "'id_'+#id")
+    public User testKey(Integer id){
+        System.out.println("这不是缓存哦");
+        return list.get(id);
+    }
+
+    @CachePut(value = "common",key = "'id_'+#io")
+    public User updateKey(Integer io){
+        User user1=list.get(io);
+        user1.setName("mwz");
+        System.out.println(list.get(io).getName());
+        return user1;
+    }
 }

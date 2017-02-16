@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.nio.channels.Pipe;
+
 /**
  * Created by Z先生 on 2017/2/15.
  */
@@ -36,5 +38,12 @@ public class RedisCacheTest {
         user.setId(1);
         xx=cacheTest.updateUser(1);
         System.out.println(cacheTest.getUser(1).getName());
+    }
+
+    @Test
+    public void testKey(){
+        cacheTest.testKey(1);
+        cacheTest.updateKey(1);
+        cacheTest.testKey(1);
     }
 }
