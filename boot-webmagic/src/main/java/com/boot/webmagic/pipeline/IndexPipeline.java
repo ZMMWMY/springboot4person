@@ -31,7 +31,7 @@ public class IndexPipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        New n = new New(resultItems.get("title"), resultItems.get("url"), new Date(), resultItems.get("source"));
+        New n = new New((String) resultItems.get("title"),(String) resultItems.get("url"), new Date(), (String)resultItems.get("source"));
         try {
             EsClient.createIndex(indexName, typeName, new ObjectMapper().writeValueAsString(n));
         } catch (JsonProcessingException e) {
