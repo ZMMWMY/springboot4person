@@ -5,6 +5,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -16,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
@@ -31,7 +33,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Z先生 on 2017/3/16.
@@ -141,9 +145,16 @@ public class HttpUtil {
     }
 
 
-    public void post(String url, List<NameValuePair> param) {
+    public void post(String url, Map<String,String> param) {
         HttpPost httpPost = new HttpPost(url);
         try {
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            if(param!=null){
+                for (Map.Entry<String, String> entry : param.entrySet()) {
+                    nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+                httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
+            }
             CloseableHttpResponse response = getHttpClient().execute(httpPost);
             HttpEntity entity = response.getEntity();
             System.out.println(EntityUtils.toString(entity));
@@ -157,7 +168,9 @@ public class HttpUtil {
         try {
             CloseableHttpResponse response = getHttpClient().execute(get);
             HttpEntity entity = response.getEntity();
-            System.out.println(EntityUtils.toString(entity,"UTF-8"));
+            String html = EntityUtils.toString(entity,"UTF-8");
+            String ses_rec_id= html.split("<input type=\"hidden\" name=\"ses_rec_id\" value=\"")[1].split("\">")[0];
+            System.out.println(ses_rec_id);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,7 +179,7 @@ public class HttpUtil {
 
     public static void main(String[] args) throws Exception {
       //  getHttpUtilInstance().grabPageHTML();
-        getHttpUtilInstance().get("http://sp.ogurishun.jp/blog/oguri/article.php?id=19");
+        getHttpUtilInstance().get("https://cha.isao.net/profile_oem/OEMLogin.php?product_name=m-up&param1=site&param2=T00069E20001MP001103");
     }
 
     public void grabPageHTML() throws Exception {
