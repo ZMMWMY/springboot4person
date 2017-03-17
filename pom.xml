@@ -24,6 +24,7 @@
         <module>boot-mybatis-again</module>
         <module>boot-webmagic</module>
         <module>boot-elasticsearch</module>
+        <module>boot-mybatis-security</module>
     </modules>
 
     <properties>
