@@ -182,18 +182,5 @@ public class HttpUtil {
         getHttpUtilInstance().get("https://cha.isao.net/profile_oem/OEMLogin.php?product_name=m-up&param1=site&param2=T00069E20001MP001103");
     }
 
-    public void grabPageHTML() throws Exception {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpget = new HttpGet("http://www.baidu.com/");
-        HttpResponse response = httpclient.execute(httpget);
-        HttpEntity entity = response.getEntity();
-        String html = EntityUtils.toString(entity, "GBK");
-
-        // releaseConnection等同于reset，作用是重置request状态位，为下次使用做好准备。
-        // 其实就是用一个HttpGet获取多个页面的情况下有效果；否则可以忽略此方法。
-        httpget.releaseConnection();
-
-        System.out.println(html);
-    }
 
 }

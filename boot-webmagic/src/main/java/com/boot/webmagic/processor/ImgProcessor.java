@@ -25,6 +25,7 @@ public class ImgProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
+        page.getHtml().links();
         System.out.println(page.getUrl().toString());
         if (page.getUrl().get().equals("http://www.meizitu.com/")) {
             page.addTargetRequests(page.getHtml().regex(imgListRegex).all());
