@@ -1,7 +1,15 @@
 package com.boot.webmagic.http;
 
+import org.htmlparser.Node;
+import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
+import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Z先生 on 2017/3/17.
@@ -130,7 +138,27 @@ public class Test {
                 "</html>";
 
         Parser parser = new Parser(html);
+        System.out.println(parser.elements());
 
+        NodeFilter filter = new TagNameFilter("a");
+        NodeList list = parser.extractAllNodesThatMatch(filter);
+        System.out.println(list.size());
+        LinkTag tag = null;
+        Node node =null;
+        for (int i = 0; i < list.size(); i++)   {
+               node = list.elementAt(i);
+               if (node instanceof LinkTag){
+                   tag = (LinkTag) node;
+                   System.out.println(tag.getAttribute("href"));
+               }
+        }
+
+       /* Pattern pattern = Pattern.compile("<a\\s+href[^>]*>");
+        Matcher matcher = pattern.matcher(html);
+        while (matcher.find()) {
+            System.out.println("+"
+                    + html.substring(matcher.start(), matcher.end()));
+        }*/
 
     }
 }
