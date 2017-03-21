@@ -235,9 +235,10 @@ class DownImgload implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            String html = HttpUtil.getHttpUtilInstance().getHtml(url);
-            System.out.println("******************************************"+html);
-            HttpUtil.getHttpUtilInstance().downImg(html);
+//            String html = HttpUtil.getHttpUtilInstance().getHtml(url);
+            System.out.println("******************************************"+url);
+//            System.out.println("******************************************"+html);
+            HttpUtil.getHttpUtilInstance().downImg(url);
         }
     }
 }
@@ -275,7 +276,7 @@ class ParseHtml implements Runnable {
                                 UrlQueue.urlPool.add(url);
                                 UrlQueue.addPageUrl("http://sp.ogurishun.jp/blog/oguri/" + url);
                                 if(url.equals("?page=25")){
-                                    System.exit(0);
+                                    Thread.currentThread().interrupt();
                                 }
                             }
                         }
