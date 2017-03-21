@@ -197,6 +197,7 @@ class parseImg implements Runnable {
             try {
 
                 String url = UrlQueue.removeArticleUrl();
+                System.out.println("0000000000000000000000000000000000000000000000"+url);
                 String html = HttpUtil.getHttpUtilInstance().getHtml(url);
 
                 Parser parser = new Parser(html);
@@ -210,7 +211,7 @@ class parseImg implements Runnable {
                     if (node instanceof ImageTag) {
                         tag = (ImageTag) node;
                         String imgUrl = tag.getImageURL();
-                        System.out.println(imgUrl);
+                        System.out.println("imgUrlimgUrlimgUrlimgUrlimgUrlimgUrlimgUrlimgUrlimgUrl"+imgUrl);
                         UrlQueue.addImgUrl(imgUrl);
                     }
                 }
@@ -251,13 +252,12 @@ class ParseHtml implements Runnable {
 
             try {
                 String htmlUrl = UrlQueue.removePageUrl();
-                System.out.println(htmlUrl);
+                System.out.println("htmlUrlhtmlUrlhtmlUrlhtmlUrlhtmlUrl"+htmlUrl);
                 String html = HttpUtil.getHttpUtilInstance().getHtml(htmlUrl);
 
                 Parser parser = new Parser(html);
                 NodeFilter filter = new TagNameFilter("a");
                 NodeList list = parser.extractAllNodesThatMatch(filter);
-                System.out.println(list.size());
                 LinkTag tag = null;
                 Node node = null;
 

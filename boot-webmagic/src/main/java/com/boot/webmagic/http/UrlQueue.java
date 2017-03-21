@@ -41,8 +41,8 @@ public class UrlQueue {
         pageQueue.put(url);
     }
 
-    public static String removePageUrl() {
-        return (String) pageQueue.poll();
+    public static String removePageUrl() throws InterruptedException {
+        return (String) pageQueue.take();
 
     }
 }
