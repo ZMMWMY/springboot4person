@@ -1,13 +1,20 @@
 package com.boot.webmagic.http;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
+import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+import org.springframework.web.util.UrlPathHelper;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +22,10 @@ import java.util.regex.Pattern;
  * Created by Z先生 on 2017/3/17.
  */
 public class Test {
-    public static void main(String[] args) throws ParserException {
+
+    Set<String> urlPool = new HashSet<String>();
+
+    public static void main(String[] args) throws ParserException, InterruptedException, IOException {
         String html = "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
@@ -137,21 +147,37 @@ public class Test {
                 "</body>\n" +
                 "</html>";
 
-        Parser parser = new Parser(html);
-        System.out.println(parser.elements());
+        LoginTest loginTest = new LoginTest();
+        loginTest.login();
+        UrlQueue.addPageUrl("http://sp.ogurishun.jp/blog/oguri/?page=1");
+        Thread t1 = new Thread(new ParseHtml());
+        Thread t2 = new Thread(new parseImg());
+        Thread t3 = new Thread(new DownImgload());
 
+        t1.start();
+        t2.start();
+        t3.start();
+
+
+
+        /*Parser parser = new Parser(html);
         NodeFilter filter = new TagNameFilter("a");
         NodeList list = parser.extractAllNodesThatMatch(filter);
         System.out.println(list.size());
         LinkTag tag = null;
-        Node node =null;
-        for (int i = 0; i < list.size(); i++)   {
-               node = list.elementAt(i);
-               if (node instanceof LinkTag){
-                   tag = (LinkTag) node;
-                   System.out.println(tag.getAttribute("href"));
-               }
-        }
+        Node node = null;
+        for (int i = 0; i < list.size(); i++) {
+            node = list.elementAt(i);
+            if (node instanceof LinkTag) {
+                tag = (LinkTag) node;
+                String url = tag.getAttribute("href");
+                if (url.contains("article")) {
+                    UrlQueue.addArticleUrl(url);
+                } else if (url.contains("page")) {
+
+                }
+            }
+        }*/
 
        /* Pattern pattern = Pattern.compile("<a\\s+href[^>]*>");
         Matcher matcher = pattern.matcher(html);
@@ -160,5 +186,104 @@ public class Test {
                     + html.substring(matcher.start(), matcher.end()));
         }*/
 
+    }
+}
+
+class parseImg implements Runnable {
+
+    public void run() {
+
+        while (true) {
+            try {
+
+                String url = UrlQueue.removeArticleUrl();
+                String html = HttpUtil.getHttpUtilInstance().getHtml(url);
+
+                Parser parser = new Parser(html);
+                NodeFilter filter = new NodeClassFilter(ImageTag.class);
+                NodeList list = parser.extractAllNodesThatMatch(filter);
+                Node node = null;
+                ImageTag tag = null;
+                for (int i = 0; i < list.size(); i++) {
+
+                    node = list.elementAt(i);
+                    if (node instanceof ImageTag) {
+                        tag = (ImageTag) node;
+                        String imgUrl = tag.getImageURL();
+                        System.out.println(imgUrl);
+                        UrlQueue.addImgUrl(imgUrl);
+                    }
+                }
+            } catch (ParserException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+}
+
+class DownImgload implements Runnable {
+
+    public void run() {
+        while (true) {
+
+            String url = null;
+            try {
+                url = UrlQueue.removeImgUrl();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            String html = HttpUtil.getHttpUtilInstance().getHtml(url);
+            System.out.println("******************************************"+html);
+            HttpUtil.getHttpUtilInstance().downImg(html);
+        }
+    }
+}
+
+class ParseHtml implements Runnable {
+
+    public void run() {
+
+        while (true) {
+
+            try {
+                String htmlUrl = UrlQueue.removePageUrl();
+                System.out.println(htmlUrl);
+                String html = HttpUtil.getHttpUtilInstance().getHtml(htmlUrl);
+
+                Parser parser = new Parser(html);
+                NodeFilter filter = new TagNameFilter("a");
+                NodeList list = parser.extractAllNodesThatMatch(filter);
+                System.out.println(list.size());
+                LinkTag tag = null;
+                Node node = null;
+
+                for (int i = 0; i < list.size(); i++) {
+                    node = list.elementAt(i);
+                    if (node instanceof LinkTag) {
+                        tag = (LinkTag) node;
+                        String url = tag.getAttribute("href");
+                        if (url.contains("article")) {
+                            if (!UrlQueue.urlPool.contains(url)) {
+                                UrlQueue.urlPool.add(url);
+                                UrlQueue.addArticleUrl("http://sp.ogurishun.jp/blog/oguri/" + url);
+                            }
+                        } else if (url.contains("?page")) {
+                            if (!UrlQueue.urlPool.contains(url)) {
+                                UrlQueue.urlPool.add(url);
+                                UrlQueue.addPageUrl("http://sp.ogurishun.jp/blog/oguri/" + url);
+                                if(url.equals("?page=25")){
+                                    System.exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

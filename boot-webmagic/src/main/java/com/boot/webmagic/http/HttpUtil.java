@@ -1,6 +1,7 @@
 package com.boot.webmagic.http;
 
 import org.apache.http.*;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
@@ -12,11 +13,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -25,8 +24,8 @@ import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -36,11 +35,16 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import static org.springframework.util.ResourceUtils.getFile;
 
 /**
  * Created by Z先生 on 2017/3/16.
  */
 public class HttpUtil {
+
+    static CookieStore cookieStore = new BasicCookieStore();
 
     private PoolingHttpClientConnectionManager httpClientConnectionManager = null;
 
@@ -88,6 +92,7 @@ public class HttpUtil {
             }
             HttpClientContext clientContext = HttpClientContext.adapt(context);
             HttpRequest request = clientContext.getRequest();
+            clientContext.setCookieStore(cookieStore);
             boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
             if (idempotent) {
                 // Retry if the request is considered idempotent
@@ -102,7 +107,7 @@ public class HttpUtil {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(600000)
                 .setSocketTimeout(30000)
-                .setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
+                .setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY).build();
         // 声明重定向策略对象
         LaxRedirectStrategy redirectStrategy = new LaxRedirectStrategy();
 
@@ -110,6 +115,7 @@ public class HttpUtil {
                 .setDefaultRequestConfig(requestConfig)
                 .setRedirectStrategy(redirectStrategy)
                 .setRetryHandler(myRetryHandler)
+                .setDefaultCookieStore(cookieStore)
                 .build();
         return httpClient;
     }
@@ -145,15 +151,15 @@ public class HttpUtil {
     }
 
 
-    public void post(String url, Map<String,String> param) {
+    public void post(String url, Map<String, String> param) {
         HttpPost httpPost = new HttpPost(url);
         try {
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            if(param!=null){
+            if (param != null) {
                 for (Map.Entry<String, String> entry : param.entrySet()) {
                     nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
                 }
-                httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
+                httpPost.setEntity(new UrlEncodedFormEntity(nvps, "utf-8"));
             }
             CloseableHttpResponse response = getHttpClient().execute(httpPost);
             HttpEntity entity = response.getEntity();
@@ -163,13 +169,13 @@ public class HttpUtil {
         }
     }
 
-    public void get(String url){
+    public void get(String url) {
         HttpGet get = new HttpGet(url);
         try {
             CloseableHttpResponse response = getHttpClient().execute(get);
             HttpEntity entity = response.getEntity();
-            String html = EntityUtils.toString(entity,"UTF-8");
-            String ses_rec_id= html.split("<input type=\"hidden\" name=\"ses_rec_id\" value=\"")[1].split("\">")[0];
+            String html = EntityUtils.toString(entity, "UTF-8");
+            String ses_rec_id = html.split("<input type=\"hidden\" name=\"ses_rec_id\" value=\"")[1].split("\">")[0];
             System.out.println(ses_rec_id);
         } catch (IOException e) {
             e.printStackTrace();
@@ -177,8 +183,53 @@ public class HttpUtil {
 
     }
 
+    public String getHtml(String url) {
+        HttpGet get = new HttpGet(url);
+        try {
+            CloseableHttpResponse response = getHttpClient().execute(get);
+            HttpEntity entity = response.getEntity();
+            return EntityUtils.toString(entity, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void downImg(String url) {
+
+        File imgDir = new File("E:\\img");
+        if (!imgDir.exists()) {
+            imgDir.mkdir();
+        }
+        try {
+            FileOutputStream fout = new FileOutputStream(getFile(imgDir + "\\" + UUID.randomUUID().toString() + ".jpg"));
+            try {
+                HttpGet get = new HttpGet(url);
+                get.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+                HttpResponse response = getHttpClient().execute(get);
+                HttpEntity entity = response.getEntity();
+                DataInputStream in = new DataInputStream(entity.getContent());
+
+                byte[] tmp = new byte[1024];
+                int l = -1;
+                while ((l = in.read(tmp)) != -1) {
+                    fout.write(tmp, 0, l);
+                }
+                fout.flush();
+                fout.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws Exception {
-      //  getHttpUtilInstance().grabPageHTML();
+        //  getHttpUtilInstance().grabPageHTML();
         getHttpUtilInstance().get("https://cha.isao.net/profile_oem/OEMLogin.php?product_name=m-up&param1=site&param2=T00069E20001MP001103");
     }
 
