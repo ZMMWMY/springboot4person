@@ -23,6 +23,8 @@ public class Test {
 
     @org.junit.Test
     public void test1(){
+        userDao.deleteAll();
+
         userDao.insert(new User(1L,"zmm"));
         userDao.insert(new User(2L,"wmy"));
         userDao.insert(new User(3L,"zmmwmy"));
