@@ -13,4 +13,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface UserDao extends MongoRepository<User,Long>{
 
     User findByName(String name);
+
+    void deleteByName(String name);
 }

@@ -10,6 +10,11 @@ import org.springframework.data.annotation.Id;
  */
 public class User {
 
+
+    /**
+     * 。如果主键字段命名ID 使用@ ID注释不是强制性的。
+     * 然而，许多人仍然使用注释的可读性。有些人认为这是最好的做法，使用ID注释，即使当它不是必需的。
+     * */
     @Id
     private Long id;
 

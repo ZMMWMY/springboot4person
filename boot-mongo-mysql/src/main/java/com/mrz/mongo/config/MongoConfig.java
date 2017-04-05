@@ -25,11 +25,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
     /**
      * remove _class   method one
      * */
-/*
     @Value("${mongo.ip}")
     private String MONGO_IP;
     @Value("${mongo.port}")
-    private int MONGO_PORT;*/
+    private int MONGO_PORT;
 
 
     protected String getDatabaseName() {
@@ -37,7 +36,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
     }
 
     public Mongo mongo() throws Exception {
-        return new MongoClient("127.0.0.1", 27017);
+        return new MongoClient(MONGO_IP, MONGO_PORT);
     }
 
     @Override
