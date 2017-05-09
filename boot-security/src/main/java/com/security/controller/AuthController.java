@@ -1,5 +1,6 @@
 package com.security.controller;
 
+import com.security.util.JwtTokenUtil;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,9 @@ public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
     @PostMapping
     public Object auth(@RequestParam(value = "username") String username,
                        @RequestParam(value = "password") String password) {
@@ -34,7 +38,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return username;
+        return jwtTokenUtil.generateToken(username);
     }
 
     @PostMapping(value = "/register")

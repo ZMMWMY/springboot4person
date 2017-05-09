@@ -20,11 +20,11 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
 
-//    @Value("${jwt.secret}")
-    private String secret;
+    //    @Value("${jwt.secret}")
+    private String secret = "gage";
 
-//    @Value("${jwt.expiration}")
-    private Long expiration;
+    //    @Value("${jwt.expiration}")
+    private Long expiration = 3600L;
 
     public String getUsernameFromToken(String token) {
         String username;
@@ -88,6 +88,13 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, username);
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
