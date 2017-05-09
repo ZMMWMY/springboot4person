@@ -1,50 +1,58 @@
 package com.security.config;
 
+import com.security.config.core.CustomUserDetailService;
+import com.security.config.core.ValidTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Created by Z先生 on 2016/11/19.
  */
 @Configuration
-//开启Security支持
 @EnableWebSecurity
-//继承该类,设定具体的细节
+//开始全局注解
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    CustomUserDetailService userDetailsService;
 
     /*基于url的拦截*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //指定了/和/home不需要任何认证就可以访问，其他的路径都必须通过身份验证。
-        http.authorizeRequests().antMatchers("/", "/home").permitAll()
+        http.csrf().disable()
+                .authorizeRequests().antMatchers("/", "/home", "/auth/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "   /**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().exceptionHandling().authenticationEntryPoint(null);
+
+        http.addFilterBefore(validTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //为单个用户设定了储存在内存中的用户名和密码和角色
-       /* auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");*/
-        auth.userDetailsService(userDetailsService());
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean
-    protected UserDetailsService userDetailsService() {
-        return new SecurityDataService();
+    protected ValidTokenFilter validTokenFilter() {
+        return new ValidTokenFilter();
+    }
+
+    @Bean
+    protected BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

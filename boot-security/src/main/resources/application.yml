@@ -1,2 +1,6 @@
 server:
   port: 8081
+spring:
+  data:
+    mongodb:
+      uri: mongodb://119.23.127.232:32768/security
