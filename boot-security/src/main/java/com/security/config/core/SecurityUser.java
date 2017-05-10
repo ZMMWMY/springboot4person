@@ -62,7 +62,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return locked;
+        return true;
     }
 
     @Override
@@ -72,6 +72,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enable;
+        return true;
     }
 }

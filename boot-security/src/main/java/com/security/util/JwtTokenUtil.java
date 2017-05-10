@@ -1,5 +1,6 @@
 package com.security.util;
 
+import com.security.config.core.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -59,7 +60,7 @@ public class JwtTokenUtil implements Serializable {
         return expiration;
     }
 
-    private Claims getClaimsFromToken(String token) {
+    public Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()
@@ -125,8 +126,8 @@ public class JwtTokenUtil implements Serializable {
         return refreshedToken;
     }
 
-  /*  public Boolean validateToken(String token, UserDetails userDetails) {
-        JwtUser user = (JwtUser) userDetails;
+ /*   public Boolean validateToken(String token, UserDetails userDetails) {
+        SecurityUser user = (SecurityUser) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getCreatedDateFromToken(token);
         //final Date expiration = getExpirationDateFromToken(token);

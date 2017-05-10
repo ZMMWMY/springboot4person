@@ -1,7 +1,13 @@
 package com.security.config.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.util.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,7 +27,11 @@ public class ValidTokenFilter extends OncePerRequestFilter {
     private static final String X_HEADER_NAME = "X-AUTH-TOKEN";
 
     private static final String X_HEADER_Head = "Bearer";
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    CustomUserDetailService customUserDetailService;
 
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -35,10 +45,32 @@ public class ValidTokenFilter extends OncePerRequestFilter {
         response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
         String token = request.getHeader(X_HEADER_NAME);
-        if (token != null && !token.startsWith(X_HEADER_Head)) {
+        if (token != null /*&& !token.startsWith(X_HEADER_Head)*/) {
 
+//            String username = jwtTokenUtil.getUsernameFromToken(token);
+            if (/*username != null &&*/ SecurityContextHolder.getContext().getAuthentication() == null) {
+                Claims claims = jwtTokenUtil.getClaimsFromToken(token);
+                if (claims == null) {
+                    //验证不通过
+                    HttpServletResponse httpResponse = response;
+                    httpResponse.setCharacterEncoding("UTF-8");
+                    httpResponse.setContentType("application/json; charset=utf-8");
+                    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-            SecurityContextHolder.getContext().setAuthentication(null);
+                    //将验证不通过的错误返回
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    httpResponse.getWriter().write(mapper.writeValueAsString(new CustomResponse<>(CustomResponse.TOKEN_FAIL, CustomResponse.TOKEN_FAIL_MSG, null)));
+                    return;
+                } else {
+                    UserDetails userDetails = customUserDetailService.loadUserByUsername((String) claims.get("sub"));
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
+                            request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
         filterChain.doFilter(request, response);
     }

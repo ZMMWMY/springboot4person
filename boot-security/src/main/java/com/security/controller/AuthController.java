@@ -1,14 +1,13 @@
 package com.security.controller;
 
+import com.security.config.core.CustomResponse;
 import com.security.util.JwtTokenUtil;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,14 +30,14 @@ public class AuthController {
     JwtTokenUtil jwtTokenUtil;
 
     @PostMapping
-    public Object auth(@RequestParam(value = "username") String username,
-                       @RequestParam(value = "password") String password) {
+    public CustomResponse auth(@RequestParam(value = "username") String username,
+                               @RequestParam(value = "password") String password) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
-        Authentication authentication = authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return jwtTokenUtil.generateToken(username);
+        authenticationManager.authenticate(token);
+        return CustomResponse.builder()
+                .code(CustomResponse.CODE_SUCCESS).
+                        msg(CustomResponse.MSG_SUCCESS).body(jwtTokenUtil.generateToken(username)).build();
     }
 
     @PostMapping(value = "/register")
