@@ -36,8 +36,8 @@ public class AuthController {
                                @RequestParam(value = "password",required = false) String password) {
         Optional.of(username);
         Optional.of(password);
+        //用户登录，有Security来实现密码校验过程，会调用重写的UserDetailService类
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
         authenticationManager.authenticate(token);
         return CustomResponse.builder()
                 .code(CustomResponse.CODE_SUCCESS).

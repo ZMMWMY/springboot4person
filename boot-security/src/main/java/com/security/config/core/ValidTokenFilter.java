@@ -68,6 +68,7 @@ public class ValidTokenFilter extends OncePerRequestFilter {
                     httpResponse.getWriter().write(mapper.writeValueAsString(new CustomResponse<>(CustomResponse.TOKEN_FAIL, CustomResponse.TOKEN_FAIL_MSG, null)));
                     return;
                 } else {
+                    //token组装成authentication放到上下文中,在后面的接口的校验权限中用到
                     UserDetails userDetails = customUserDetailService.loadUserByUsername((String) claims.get("sub"));
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
