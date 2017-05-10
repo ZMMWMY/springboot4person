@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 /**
  * Author : MrZ
  *
@@ -30,8 +32,10 @@ public class AuthController {
     JwtTokenUtil jwtTokenUtil;
 
     @PostMapping
-    public CustomResponse auth(@RequestParam(value = "username") String username,
-                               @RequestParam(value = "password") String password) {
+    public CustomResponse auth(@RequestParam(value = "username",required = false) String username,
+                               @RequestParam(value = "password",required = false) String password) {
+        Optional.of(username);
+        Optional.of(password);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
         authenticationManager.authenticate(token);

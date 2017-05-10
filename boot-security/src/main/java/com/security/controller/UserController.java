@@ -2,6 +2,7 @@ package com.security.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.security.config.core.CustomResponse;
 import com.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class UserController {
 
     @PostMapping(value = "/delete/{id}")
     @PreAuthorize(value = "hasRole('ADMIN')")
-    public ResponseEntity delete(@PathVariable String id) throws JsonProcessingException {
+    public CustomResponse delete(@PathVariable String id) throws JsonProcessingException {
         userRepository.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return CustomResponse.builder().code(CustomResponse.CODE_SUCCESS).msg(CustomResponse.MSG_SUCCESS).build();
     }
 }
