@@ -1,0 +1,15 @@
+#server.port=7777
+#security.oauth2.resource.token-info-uri=${auth-server:http://localhost:9999/uaa}/oauth/check_token
+#security.oauth2.client.client-id=demo
+#security.oauth2.client.client-secret=demo
+#
+server:
+  port: 8082
+  context-path: /resource
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://localhost:8081/security/oauth/check_token
+    client:
+      access-token-uri: http://localhost:8081/security/oauth/token
+      user-authorization-uri: http://localhost:8081/security/oauth/authorize
