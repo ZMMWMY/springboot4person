@@ -13,12 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
  * Modified By :
  */
 @RestController
-@RequestMapping(value = "/api")
 public class MessageController {
 
     @PreAuthorize("#oauth2.hasScope('read')")
     @GetMapping(value = "/get")
     public String get(){
+        return "get　Success";
+    }
+
+    @PreAuthorize("#oauth2.hasScope('read')")
+    @GetMapping(value = "/")
+    public String index(){
         return "get　Success";
     }
 

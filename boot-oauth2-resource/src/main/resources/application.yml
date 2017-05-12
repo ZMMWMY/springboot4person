@@ -4,12 +4,21 @@
 #security.oauth2.client.client-secret=demo
 #
 server:
-  port: 8082
-  context-path: /resource
+  port: 8083
+  context-path: /res
+  session:
+    cookie:
+      path: /res
 security:
   oauth2:
     resource:
-      token-info-uri: http://localhost:8081/security/oauth/check_token
+      token-info-uri: http://localhost:8082/security/oauth/check_token
     client:
-      access-token-uri: http://localhost:8081/security/oauth/token
-      user-authorization-uri: http://localhost:8081/security/oauth/authorize
+      client-id: test-client-id
+      client-secret: test-client-id-secret-123
+      access-token-uri: http://localhost:8082/security/oauth/token
+      user-authorization-uri: http://localhost:8082/security/oauth/authorize
+#      id: test-client-id
+#      client-secret: test-client-id-secret-123 完完全全的错误配置  会引起csrf错误
+    sso:
+      login-path: /login
