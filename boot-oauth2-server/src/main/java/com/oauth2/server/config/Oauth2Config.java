@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
 
 /**
  * Author : MrZ
@@ -27,74 +30,54 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Slf4j
 @Configuration
 @EnableAuthorizationServer
-public class OauthServerConfig extends AuthorizationServerConfigurerAdapter {
-//
+public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
+    //
 //    AuthorizationEndpoint  是用于授权服务请求的。默认的URL是：/oauth/authrize。
 //
 //    TokenEndpoint  是用于获取访问令牌（Access Tokens）的请求。默认的URL是：/oauth/token。
-
-    @Autowired
-    TokenStore tokenStore;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Value("${config.oauth2.privateKey}")
-    private String privateKey = "test";
+    private String privateKey;
 
     @Value("${config.oauth2.publicKey}")
-    private String publicKey = "test";
+    private String publicKey;
 
-
-    //    在令牌端点上定义了安全约束。
-    //为什么不用自动配置。因为/oauth/check_token默认是denyAll.
-    //必须手动设置oauthServer.checkTokenAccess("isAuthenticated()");
-    //才访问能验证Access Token。
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.checkTokenAccess("permitAll()");
-        oauthServer.allowFormAuthenticationForClients();
-    }
-
-    //获取client在授权服务中的数据
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        super.configure(clients);
-        clients.inMemory().and().withClient("testClientId").secret("testClientSecret")
-                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
-                .scopes("read", "write")
-                .redirectUris("http://localhost:8080/client/");
-
-    }
-
-    //token 处理
-    //使用JWT 使用此加密Token不需要后台存储
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenStore(tokenStore()).approvalStore(approvalStore()).accessTokenConverter(tokenEnhancer())
-                .authenticationManager(authenticationManager);
-    }
-
-    //这个bean是必不可少的，不然的话就会初始化报错的。
-    @Bean
-    public ApprovalStore approvalStore() throws Exception {
-        TokenApprovalStore store = new TokenApprovalStore();
-        store.setTokenStore(tokenStore());
-        return store;
-    }
-
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Bean
     public JwtAccessTokenConverter tokenEnhancer() {
         log.info("Initializing JWT with public key:\n" + publicKey);
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey(privateKey);
-//        converter.setVerifierKey(publicKey);
+        converter.setVerifierKey(publicKey);
         return converter;
     }
 
     @Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(tokenEnhancer());
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.inMemory().withClient("test-client-id").secret("test-client-id-secret-123")
+                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
+                .scopes("read", "write")
+                .redirectUris("http://localhost:8080");
+    }
+
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.accessTokenConverter(tokenEnhancer()).tokenStore(tokenStore()).authenticationManager(authenticationManager);
+    }
+
+    //    在令牌端点上定义了安全约束。
+    //为什么不用自动配置。因为/oauth/check_token默认是denyAll.
+    //必须手动设置oauthServer.checkTokenAccess("isAuthenticated()");
+    //才访问能验证Access Token。
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.checkTokenAccess("isAuthenticated()");
     }
 }

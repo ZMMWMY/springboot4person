@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .anonymous().disable()
                 .authorizeRequests().anyRequest().authenticated()
-        ;
+        .and().csrf().disable();
+
     }
 
     @Bean

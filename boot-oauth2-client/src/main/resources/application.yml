@@ -1,14 +1,24 @@
 server:
   port: 8080
-  context-path: /client
+#  context-path: /client
+#  session:
+#    cookie:
+#      path: /client
 security:
   oauth2:
     client:
-      client-id: testClientId
-      client-secret: testClientSecret
-      access-token-uri: http://localhost:8082/server/oauth/token
-      user-authorization-uri: http://localhost:8082/server/oauth/authorize
+      client-id: test-client-id
+      client-secret: test-client-id-secret-123
+      access-token-uri: http://localhost:8082/security/oauth/token
+      user-authorization-uri: http://localhost:8082/security/oauth/authorize
       #      clientAuthenticationScheme: form
-      resource:
+    resource:
       #      userInfoUri: http://localhost:8082/me
-      token-info-uri: http://localhost:8082/server/oauth/check_token
+      token-info-uri: http://localhost:8082/security/oauth/check_token
+#    sso:
+#      login-path: /rollback
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
