@@ -41,4 +41,10 @@ public class MessageController {
         model.addAttribute("data", data);
         return data;
     }
+
+    @GetMapping(value = "/")
+    public String index(){
+        System.out.println(1);
+        return "index";
+    }
 }
