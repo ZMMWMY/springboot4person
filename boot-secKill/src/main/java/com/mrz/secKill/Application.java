@@ -1,5 +1,6 @@
 package com.mrz.secKill;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Modified By :
  */
 @SpringBootApplication
+@MapperScan(value = "com.mrz.secKill.mapper")
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

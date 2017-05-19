@@ -1,0 +1,16 @@
+spring:
+  redis:
+    host: 119.23.127.232
+    port: 6379
+    database: 8
+    pool:
+      max-active: 8 #最大连接数
+      min-idle: 5 #最小空闲连接数
+      max-idle: 20 #最大空闲连接数
+      max-wait: 5000 #无资源时，最大连接分配时间
+    timeout: 5000 #连接超时
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mrz.secKill.model
