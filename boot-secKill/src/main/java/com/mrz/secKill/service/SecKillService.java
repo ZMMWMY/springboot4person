@@ -14,6 +14,7 @@ public class SecKillService {
     public void secKill(String phone, String url) {
         //校验抢购
         //限流
+
         //是否重复抢购
 
         //加入消息队列
