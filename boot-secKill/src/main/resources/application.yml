@@ -9,6 +9,7 @@ spring:
       max-idle: 20 #最大空闲连接数
       max-wait: 5000 #无资源时，最大连接分配时间
     timeout: 5000 #连接超时
+    password: 12345zfb
   datasource:
     password: 1
     url: jdbc:mysql://119.23.127.232:3306/secKill?&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false

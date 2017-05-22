@@ -91,7 +91,7 @@ public class JedisCache implements CacheManager{
 
     @Override
     public void hset(String key, String field, String value) {
-
+        jedisTemplate.hset(key,field,value);
     }
 
     @Override

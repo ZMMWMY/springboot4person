@@ -36,13 +36,13 @@ public class GoodsController {
         Good good = goodService.findById(id);
 
         if (null == good) {
-            return ObjectDataResponse.builder().code(Constant.DATA_NOTFIND).msg(Constant.DATA_NOTFIND_MSG).build();
+            return ObjectDataResponse.builder().code(Constant.SystemCode.DATA_NOTFIND).msg(Constant.SystemCode.DATA_NOTFIND_MSG).build();
         }
         Date start = good.getStartTime();
         Date end = good.getEndTime();
         long now = System.currentTimeMillis();
         if (now < start.getTime() || now > end.getTime()) {
-            return ObjectDataResponse.builder().code(Constant.DATA_EXPIRED).msg(Constant.DATA_EXPIRED_MSG).body(good).build();
+            return ObjectDataResponse.builder().code(Constant.SystemCode.DATA_EXPIRED).msg(Constant.SystemCode.DATA_EXPIRED_MSG).body(good).build();
         }
 
         return ObjectDataResponse.builder().body(good).build();
@@ -67,13 +67,13 @@ public class GoodsController {
     public Object url(@PathVariable Integer id) {
         Good good = goodService.findById(id);
         if (null == good) {
-            return ObjectDataResponse.builder().code(Constant.DATA_NOTFIND).msg("秒杀不存在").build();
+            return ObjectDataResponse.builder().code(Constant.SystemCode.DATA_NOTFIND).msg("秒杀不存在").build();
         }
         Date start = good.getStartTime();
         Date end = good.getEndTime();
         long now = System.currentTimeMillis();
         if (now < start.getTime() || now > end.getTime()) {
-            return ObjectDataResponse.builder().code(Constant.DATA_EXPIRED).msg("秒杀结束").build();
+            return ObjectDataResponse.builder().code(Constant.SystemCode.DATA_EXPIRED).msg("秒杀结束").build();
         }
         return ObjectDataResponse.builder().body(SecKillUtil.goodSecKill(id)).build();
 

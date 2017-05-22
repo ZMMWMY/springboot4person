@@ -13,7 +13,7 @@ import org.springframework.util.DigestUtils;
 public class SecKillUtil {
 
     public static String goodSecKill(Integer id) {
-        return DigestUtils.md5DigestAsHex((Constant.SALT + id).getBytes());
+        return DigestUtils.md5DigestAsHex((Constant.SystemCode.SALT + id).getBytes());
     }
 
 }

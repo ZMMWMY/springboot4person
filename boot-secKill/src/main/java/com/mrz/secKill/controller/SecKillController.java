@@ -17,23 +17,23 @@ import java.util.Map;
  * Modified By :
  */
 @Controller
+@RequestMapping(value = "/kill")
 public class SecKillController {
 
     @PostMapping(value = "/{id}/{md5}/action")
+    @ResponseBody
     public Object secKill(@PathVariable Integer id,
                           @PathVariable String md5,
-                          @RequestParam String phone) {
+                          @RequestParam String mobile) {
         Map<String, Object> result = new HashMap();
 
         Assert.notNull(id);
         Assert.notNull(md5);
-        Assert.notNull(phone);
+        Assert.notNull(mobile);
 
         if (!SecKillUtil.goodSecKill(id).equals(md5)) {
             result.put("msg", "抢购已经结束");
         }
-
-
 
         return result;
     }

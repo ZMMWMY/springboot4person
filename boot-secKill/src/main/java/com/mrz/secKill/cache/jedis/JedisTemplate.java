@@ -49,6 +49,7 @@ public class JedisTemplate {
             jedis = getJedis();
             return jedis.get(key);
         } catch (Exception e) {
+            logger.error("find " + key + " failed  !", e);
             return null;
         } finally {
             close(jedis);
@@ -63,10 +64,48 @@ public class JedisTemplate {
             Jedis jedis1 = jedis.getShard(keyPattern);
             return jedis1.keys(keyPattern);
         } catch (Exception e) {
+            logger.error("keys jedis failed!", e);
             return new HashSet<>();
         } finally {
             close(jedis);
         }
+    }
+
+
+    public String hget(String key, String field) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.hget(key, field);
+        } catch (Exception e) {
+            logger.error("hget jedis failed!", e);
+            return null;
+        } finally {
+            close(jedis);
+        }
+    }
+
+
+
+    public boolean hset(String key, String field, String value) {
+        return hset(key, field, value, -1);
+    }
+
+    public boolean hset(String key, String field, String value, Integer EXPIRE) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.hset(key, field, value);
+            if (EXPIRE > 0) {
+                jedis.expire(key, EXPIRE);
+            }
+        } catch (Exception e) {
+            logger.error("hset jedis failed!", e);
+            return false;
+        } finally {
+            close(jedis);
+        }
+        return true;
     }
 
 

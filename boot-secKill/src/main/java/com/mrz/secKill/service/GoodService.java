@@ -28,7 +28,7 @@ public class GoodService {
     }
 
 
-    public void secKill(){
+    public void secKill(String mobile) {
 
     }
 }
