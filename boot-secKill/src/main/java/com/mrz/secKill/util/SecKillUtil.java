@@ -2,6 +2,7 @@ package com.mrz.secKill.util;
 
 import com.mrz.secKill.common.Constant;
 import org.apache.tomcat.util.security.MD5Encoder;
+import org.springframework.util.DigestUtils;
 
 /**
  * Author : MrZ
@@ -12,6 +13,7 @@ import org.apache.tomcat.util.security.MD5Encoder;
 public class SecKillUtil {
 
     public static String goodSecKill(Integer id) {
-        return MD5Encoder.encode((Constant.SALT + id).getBytes());
+        return DigestUtils.md5DigestAsHex((Constant.SALT + id).getBytes());
     }
+
 }

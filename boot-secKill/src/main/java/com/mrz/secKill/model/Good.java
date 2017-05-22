@@ -24,8 +24,6 @@ public class Good {
 
     private Integer stock;
 
-    private String link;
-
     private Date startTime;
 
     private Date endTime;

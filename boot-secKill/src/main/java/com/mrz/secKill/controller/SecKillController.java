@@ -1,6 +1,8 @@
 package com.mrz.secKill.controller;
 
 import com.mrz.secKill.util.SecKillUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +29,11 @@ public class SecKillController {
         Assert.notNull(md5);
         Assert.notNull(phone);
 
-        if (SecKillUtil.goodSecKill(id).equals(md5)) {
+        if (!SecKillUtil.goodSecKill(id).equals(md5)) {
             result.put("msg", "抢购已经结束");
         }
+
+
 
         return result;
     }
@@ -66,7 +70,8 @@ public class SecKillController {
 
     @GetMapping(value = "/now")
     @ResponseBody
-    public Object now(){
-        return System.currentTimeMillis();
+    public ResponseEntity now(){
+        return new ResponseEntity<>(System.currentTimeMillis(),HttpStatus.OK);
+
     }
 }

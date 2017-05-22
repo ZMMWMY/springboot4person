@@ -8,6 +8,12 @@ package com.mrz.secKill.common;
  */
 public interface Constant {
 
+    int DATA_NOTFIND = 201;
+    String DATA_NOTFIND_MSG = "此商品不存在";
+
+    int DATA_EXPIRED = 202;
+    String DATA_EXPIRED_MSG = "抢购已结束";
+
     /**
      * 撒点盐
      */

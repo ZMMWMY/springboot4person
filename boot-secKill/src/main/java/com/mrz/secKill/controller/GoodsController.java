@@ -1,9 +1,11 @@
 package com.mrz.secKill.controller;
 
+import com.mrz.secKill.common.Constant;
 import com.mrz.secKill.model.Good;
+import com.mrz.secKill.response.ObjectDataResponse;
+import com.mrz.secKill.response.ObjectListResponse;
 import com.mrz.secKill.service.GoodService;
 import com.mrz.secKill.util.SecKillUtil;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author : MrZ
@@ -28,27 +31,28 @@ public class GoodsController {
 
     @RequestMapping(value = "/good/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Object detail(@PathVariable Integer id) {
+    public ObjectDataResponse detail(@PathVariable Integer id) {
         Assert.notNull(id);
         Good good = goodService.findById(id);
 
         if (null == good) {
-            return null;
+            return ObjectDataResponse.builder().code(Constant.DATA_NOTFIND).msg(Constant.DATA_NOTFIND_MSG).build();
         }
         Date start = good.getStartTime();
         Date end = good.getEndTime();
         long now = System.currentTimeMillis();
         if (now < start.getTime() || now > end.getTime()) {
-            return null;
+            return ObjectDataResponse.builder().code(Constant.DATA_EXPIRED).msg(Constant.DATA_EXPIRED_MSG).body(good).build();
         }
-        good.setLink(SecKillUtil.goodSecKill(id));
-        return good;
+
+        return ObjectDataResponse.builder().body(good).build();
     }
 
     @RequestMapping(value = "/goods", method = RequestMethod.GET)
     @ResponseBody
-    public Object list() {
-        return goodService.findAllGood();
+    public ObjectListResponse<Good> list() {
+        List list = goodService.findAllGood();
+        return ObjectListResponse.builder().dataSet(list).build();
     }
 
     /**
@@ -60,18 +64,18 @@ public class GoodsController {
      */
     @RequestMapping(value = "/good/{id}/link", method = RequestMethod.GET)
     @ResponseBody
-    public Object goodLink(@PathVariable Integer id) {
+    public Object url(@PathVariable Integer id) {
         Good good = goodService.findById(id);
         if (null == good) {
-            return null;
+            return ObjectDataResponse.builder().code(Constant.DATA_NOTFIND).msg("秒杀不存在").build();
         }
         Date start = good.getStartTime();
         Date end = good.getEndTime();
         long now = System.currentTimeMillis();
         if (now < start.getTime() || now > end.getTime()) {
-            return null;
+            return ObjectDataResponse.builder().code(Constant.DATA_EXPIRED).msg("秒杀结束").build();
         }
-        return SecKillUtil.goodSecKill(id);
+        return ObjectDataResponse.builder().body(SecKillUtil.goodSecKill(id)).build();
 
     }
 }

@@ -26,4 +26,9 @@ public class GoodService {
     public Good findById(Integer id) {
         return goodMapper.findAllGoodById(id);
     }
+
+
+    public void secKill(){
+
+    }
 }

@@ -13,10 +13,10 @@ import java.util.List;
  */
 public interface GoodMapper {
 
-    @Select("select id ,name , stock , link , start_time,end_time where enable = 1")
+    @Select("select id ,name , stock  , start_time,end_time from good where enable = 1")
     List<Good> findAllGood();
 
-    @Select("select id ,name , stock , link , start_time,end_time where enable = 1 and id =#{id}")
+    @Select("select id ,name , stock  , start_time,end_time from good where enable = 1 and id =#{id}")
     Good findAllGoodById(Integer id);
 
 
