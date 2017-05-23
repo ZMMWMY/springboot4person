@@ -1,5 +1,6 @@
 package com.mrz.secKill.service;
 
+import com.mrz.secKill.cache.limit.RateLimiter;
 import com.mrz.secKill.mapper.GoodMapper;
 import com.mrz.secKill.model.Good;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.List;
 @Service
 public class GoodService {
 
+
     @Autowired
     GoodMapper goodMapper;
 
@@ -28,7 +30,20 @@ public class GoodService {
     }
 
 
-    public void secKill(String mobile) {
+    /**
+     * @param : [mobile, url]
+     * @return : void
+     * @Author : Mr Z
+     * @Description :
+     * @Date 2017/5/23
+     */
+    public void secKill(String mobile, String url) {
+        //抢购是否结束
+        //限流
+        RateLimiter.getIstance().limitFlow(url);
+        //是否在抢购队列
 
+        //进入抢购队列
+        //发送消息
     }
 }

@@ -14,14 +14,14 @@ import java.util.Set;
  * Modified By :
  */
 @Component
-public class JedisCache implements CacheManager{
+public class JedisCache implements CacheManager {
 
     @Autowired
     JedisTemplate jedisTemplate;
 
     @Override
     public Object get(String key) {
-        return jedisTemplate.get(key) ;
+        return jedisTemplate.get(key);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class JedisCache implements CacheManager{
 
     @Override
     public void set(String key, Serializable value, int seconds) {
-
+        jedisTemplate.set(key, value, seconds);
     }
 
     @Override
     public void set(String key, Serializable value) {
-
+        jedisTemplate.set(key, value);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class JedisCache implements CacheManager{
 
     @Override
     public void hset(String key, String field, String value) {
-        jedisTemplate.hset(key,field,value);
+        jedisTemplate.hset(key, field, value);
     }
 
     @Override
@@ -102,5 +102,9 @@ public class JedisCache implements CacheManager{
     @Override
     public void hdel(String key, String field) {
 
+    }
+
+    public long hlen(String key) {
+        return jedisTemplate.hlen(key);
     }
 }

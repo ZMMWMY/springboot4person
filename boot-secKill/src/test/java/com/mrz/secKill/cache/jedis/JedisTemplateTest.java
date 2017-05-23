@@ -21,12 +21,22 @@ public class JedisTemplateTest {
 
     @Test
     public void get() throws Exception {
-        System.out.println(jedisTemplate.get("123"));
+        System.out.println(jedisTemplate.get("333"));
     }
 
     @Test
     public void hget(){
-        System.out.println(jedisTemplate.hget("123","123"));
+        System.out.println(jedisTemplate.hget("name:{0}123","137"));
+    }
+
+    @Test
+    public void hset(){
+        System.out.println(jedisTemplate.hset("name:{0}123","137","137"));
+    }
+
+    @Test
+    public void hlen(){
+        System.out.println(jedisTemplate.hlen("12343"));
     }
 
 }

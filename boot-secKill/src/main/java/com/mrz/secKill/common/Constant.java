@@ -29,9 +29,18 @@ public class Constant {
 
         String MOBILEBACKLIST = "MOBILE_BLACK_LIST";
 
+        //流量队列
+        String SEC_KILL_NAME_LIST = ":SEC_KILL_NAME_LIST";
+
+        String GOOD_STOCK_LIST = "GOOD_STOCK_LIST";
+
     }
 
 
+    public interface GoodLimiter{
+
+
+    }
 
 
 }

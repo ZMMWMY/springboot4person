@@ -1,11 +1,13 @@
 package com.mrz.secKill.cache.jedis;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -56,6 +58,34 @@ public class JedisTemplate {
         }
     }
 
+    public void set(String key, Serializable value) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            set(key, value, -1);
+        } catch (Exception e) {
+            logger.error("set " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+    }
+
+
+    public void set(String key, Serializable value, Integer EXPIRE) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.set(key, JSON.toJSONString(value));
+            if (EXPIRE > 0) {
+                jedis.expire(key, EXPIRE);
+            }
+        } catch (Exception e) {
+            logger.error("set " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+    }
+
 
     public Set<String> keys(java.lang.String keyPattern) {
         ShardedJedis jedis = null;
@@ -85,6 +115,18 @@ public class JedisTemplate {
         }
     }
 
+    public long hlen(String key) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.hlen(key);
+        } catch (Exception e) {
+            logger.error("hlen jedis failed!", e);
+            return 0;
+        } finally {
+            close(jedis);
+        }
+    }
 
 
     public boolean hset(String key, String field, String value) {

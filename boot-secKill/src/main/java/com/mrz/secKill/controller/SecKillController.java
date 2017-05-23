@@ -1,6 +1,8 @@
 package com.mrz.secKill.controller;
 
+import com.mrz.secKill.service.GoodService;
 import com.mrz.secKill.util.SecKillUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/kill")
 public class SecKillController {
+    @Autowired
+    GoodService goodService;
 
     @PostMapping(value = "/{id}/{md5}/action")
     @ResponseBody
@@ -34,6 +38,7 @@ public class SecKillController {
         if (!SecKillUtil.goodSecKill(id).equals(md5)) {
             result.put("msg", "抢购已经结束");
         }
+        goodService.secKill(mobile, md5);
 
         return result;
     }
@@ -53,16 +58,16 @@ public class SecKillController {
     }
 
     /**
-     * @Author : Mr Z
-     * @Description : 根据token来下单
      * @param : [phone, md5, token]
      * @return : java.lang.Object
+     * @Author : Mr Z
+     * @Description : 根据token来下单
      * @Date 2017/5/19
      */
     @PostMapping(value = "/takeOrder")
     public Object order(@RequestParam String phone,
                         @RequestParam String md5,
-                        @RequestParam String token){
+                        @RequestParam String token) {
 
         return null;
     }
@@ -70,8 +75,8 @@ public class SecKillController {
 
     @GetMapping(value = "/now")
     @ResponseBody
-    public ResponseEntity now(){
-        return new ResponseEntity<>(System.currentTimeMillis(),HttpStatus.OK);
+    public ResponseEntity now() {
+        return new ResponseEntity<>(System.currentTimeMillis(), HttpStatus.OK);
 
     }
 }
