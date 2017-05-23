@@ -1,7 +1,10 @@
 package com.mrz.secKill.cache.jedis;
 
 
+import com.alibaba.fastjson.JSON;
 import com.mrz.secKill.common.Constant;
+import com.mrz.secKill.mq.GoodMessage;
+import com.mrz.secKill.mq.Message;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +32,8 @@ public class JedisTemplateTest {
 
     @Test
     public void set() {
-        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c"+Constant.CacheList.GOOD_STOCK_LIST , 100);
-        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c"+Constant.CacheList.SEC_KILL_LIMIT_LIST , 100);
+        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.GOOD_STOCK_LIST, 100);
+        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.SEC_KILL_LIMIT_LIST, 100);
 //        System.out.println(jedisTemplate.get("98fe8472289a52dc28140e4b799af03c"));
     }
 
@@ -58,6 +61,16 @@ public class JedisTemplateTest {
 //
 //        System.out.println(jedisTemplate.getJedis().get("123"));
 
+    }
+
+
+    @Test
+    public void rpush() {
+        Message message = new Message("SEC_KILL_TYPE", new GoodMessage("13758212259", "1234"));
+        jedisTemplate.rpush(message.getKey(), JSON.toJSONString(message));
+
+        Message msg = jedisTemplate.blpop("SEC_KILL_TYPE", Message.class);
+        System.out.println(msg);
     }
 
 }

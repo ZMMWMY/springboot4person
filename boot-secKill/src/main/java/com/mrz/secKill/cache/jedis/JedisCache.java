@@ -20,6 +20,16 @@ public class JedisCache implements CacheManager {
     @Autowired
     JedisTemplate jedisTemplate;
 
+    public long decr(String key) {
+        return jedisTemplate.decr(key);
+    }
+
+
+    public long incr(String key) {
+        return jedisTemplate.incr(key);
+    }
+
+
     public <T> T get(String key, Class<T> clz) {
         String result = get(key);
         if (result != null) {
@@ -27,6 +37,10 @@ public class JedisCache implements CacheManager {
         }
         return null;
 
+    }
+
+    public <T> T blpop(String key, Class<T> clz) {
+        return jedisTemplate.blpop(key, clz);
     }
 
     @Override

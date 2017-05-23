@@ -39,6 +39,8 @@ public class Constant {
         //秒杀队列
         String DO_SEC_KILL_LIST = ":DO_SEC_KILL_LIST";
 
+        String SEC_KILL_SUCCESS = "SEC_KILL_SUCCESS";
+
     }
 
 

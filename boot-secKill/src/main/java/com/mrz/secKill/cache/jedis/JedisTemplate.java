@@ -1,10 +1,12 @@
 package com.mrz.secKill.cache.jedis;
 
 import com.alibaba.fastjson.JSON;
+import com.mrz.secKill.common.ConvertUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.*;
 
 import java.io.Serializable;
@@ -43,6 +45,51 @@ public class JedisTemplate {
             }
         }
         return shardedJedisPool.getResource();
+    }
+
+
+    public long decr(String key) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.decr(key);
+        } catch (Exception e) {
+            logger.error("decr " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return -1;
+    }
+
+    public long incr(String key) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.incr(key);
+        } catch (Exception e) {
+            logger.error("decr " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return -1;
+    }
+
+    public <T> T blpop(String key, Class<T> clz) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            List list = jedis.blpop(2000, key);
+            if (!CollectionUtils.isEmpty(list)) {
+                String s = (String) list.get(1);
+                logger.info("***************************"+s);
+                return ConvertUtil.unserialize(s.getBytes(), clz);
+            }
+        } catch (Exception e) {
+            logger.error("blpop " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return null;
     }
 
     public void rpush(String key, String value) {
@@ -133,7 +180,7 @@ public class JedisTemplate {
             jedis = getJedis();
             return jedis.hlen(key);
         } catch (Exception e) {
-            logger.error("hlen jedis failed! key = "+key, e);
+            logger.error("hlen jedis failed! key = " + key, e);
             return 0;
         } finally {
             close(jedis);
