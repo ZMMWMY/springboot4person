@@ -45,6 +45,18 @@ public class JedisTemplate {
         return shardedJedisPool.getResource();
     }
 
+    public void rpush(String key, String value) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.rpush(key, value);
+        } catch (Exception e) {
+            logger.error("rpush " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+    }
+
     public String get(String key) {
         ShardedJedis jedis = null;
         try {

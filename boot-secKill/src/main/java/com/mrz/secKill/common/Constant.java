@@ -27,18 +27,17 @@ public class Constant {
 
     public interface CacheList {
 
+        //黑名单队列
         String MOBILEBACKLIST = "MOBILE_BLACK_LIST";
 
         //流量队列
-        String SEC_KILL_NAME_LIST = ":SEC_KILL_NAME_LIST";
+        String SEC_KILL_LIMIT_LIST = ":SEC_KILL_LIMIT_LIST";
 
-        String GOOD_STOCK_LIST = "GOOD_STOCK_LIST";
+        //商品对应库存
+        String GOOD_STOCK_LIST = ":GOOD_STOCK_LIST";
 
-    }
-
-
-    public interface GoodLimiter{
-
+        //秒杀队列
+        String DO_SEC_KILL_LIST = ":DO_SEC_KILL_LIST";
 
     }
 

@@ -1,5 +1,7 @@
 package com.mrz.secKill.controller;
 
+import com.mrz.secKill.common.Constant;
+import com.mrz.secKill.response.ObjectDataResponse;
 import com.mrz.secKill.service.GoodService;
 import com.mrz.secKill.util.SecKillUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,11 @@ public class SecKillController {
         Assert.notNull(mobile);
 
         if (!SecKillUtil.goodSecKill(id).equals(md5)) {
-            result.put("msg", "抢购已经结束");
+            ObjectDataResponse.builder().code(202).msg(Constant.SystemCode.DATA_EXPIRED_MSG).build();
         }
         goodService.secKill(mobile, md5);
 
-        return result;
+        return ObjectDataResponse.builder().msg("正在为您抢购").build();
     }
 
     /**

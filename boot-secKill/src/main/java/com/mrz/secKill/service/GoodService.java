@@ -1,5 +1,7 @@
 package com.mrz.secKill.service;
 
+import com.mrz.secKill.cache.GoodStockCache;
+import com.mrz.secKill.cache.SecKillListCache;
 import com.mrz.secKill.cache.limit.RateLimiter;
 import com.mrz.secKill.mapper.GoodMapper;
 import com.mrz.secKill.model.Good;
@@ -17,6 +19,11 @@ import java.util.List;
 @Service
 public class GoodService {
 
+    @Autowired
+    GoodStockCache goodStockCache;
+
+    @Autowired
+    SecKillListCache secKillListCache;
 
     @Autowired
     GoodMapper goodMapper;
@@ -38,12 +45,17 @@ public class GoodService {
      * @Date 2017/5/23
      */
     public void secKill(String mobile, String url) {
-        //抢购是否结束
+        //库存判断
+        if (!goodStockCache.stockExist(url)) {
+            throw new IllegalArgumentException("抱歉,抢购已结束");
+        }
         //限流
         RateLimiter.getIstance().limitFlow(url);
-        //是否在抢购队列
 
+        //是否在抢购队列
         //进入抢购队列
         //发送消息
+        secKillListCache.pushList(mobile,url);
+
     }
 }

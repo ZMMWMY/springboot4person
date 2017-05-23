@@ -1,6 +1,7 @@
 package com.mrz.secKill.cache.jedis;
 
 import com.mrz.secKill.cache.CacheManager;
+import com.mrz.secKill.common.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +20,31 @@ public class JedisCache implements CacheManager {
     @Autowired
     JedisTemplate jedisTemplate;
 
+    public <T> T get(String key, Class<T> clz) {
+        String result = get(key);
+        if (result != null) {
+            return ConvertUtil.unserialize(result.getBytes(), clz);
+        }
+        return null;
+
+    }
+
     @Override
-    public Object get(String key) {
+    public void hset(String key, String field, String value) {
+        jedisTemplate.hset(key, field, value);
+    }
+
+    @Override
+    public String hget(String key, String field) {
+        return jedisTemplate.hget(key, field);
+    }
+
+    public void rpush(String key, String value) {
+        jedisTemplate.rpush(key, value);
+    }
+
+    @Override
+    public String get(String key) {
         return jedisTemplate.get(key);
     }
 
@@ -89,15 +113,6 @@ public class JedisCache implements CacheManager {
 
     }
 
-    @Override
-    public void hset(String key, String field, String value) {
-        jedisTemplate.hset(key, field, value);
-    }
-
-    @Override
-    public Object hget(String key, String field) {
-        return null;
-    }
 
     @Override
     public void hdel(String key, String field) {

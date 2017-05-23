@@ -45,7 +45,7 @@ public class RateLimiter {
 
 
     public String getKey(String key) {
-        return key + Constant.CacheList.SEC_KILL_NAME_LIST;
+        return key + Constant.CacheList.SEC_KILL_LIMIT_LIST;
     }
 
     //获取商品总流量
