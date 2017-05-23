@@ -31,8 +31,6 @@ public class SecKillController {
     public Object secKill(@PathVariable Integer id,
                           @PathVariable String md5,
                           @RequestParam String mobile) {
-        Map<String, Object> result = new HashMap();
-
         Assert.notNull(id);
         Assert.notNull(md5);
         Assert.notNull(mobile);
@@ -43,6 +41,10 @@ public class SecKillController {
         goodService.secKill(mobile, md5);
 
         return ObjectDataResponse.builder().msg("正在为您抢购").build();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(SecKillUtil.goodSecKill(1));
     }
 
     /**

@@ -40,7 +40,7 @@ public class RateLimiter {
 
     //获取当前流量
     public long getCurrentFlow(String key) {
-        return jedisCache.hlen(getKey(key));
+        return jedisCache.hlen(key + Constant.CacheList.DO_SEC_KILL_LIST);
     }
 
 
@@ -52,6 +52,9 @@ public class RateLimiter {
     //定时器加载商品库存设置为流量阀值
     public long getLimitFlow(String key) {
         String num = String.valueOf(jedisCache.get(getKey(key)));
+        if (null == num) {
+            return 0L;
+        }
         return Long.parseLong(num);
     }
 

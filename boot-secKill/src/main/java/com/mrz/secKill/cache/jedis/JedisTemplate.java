@@ -133,7 +133,7 @@ public class JedisTemplate {
             jedis = getJedis();
             return jedis.hlen(key);
         } catch (Exception e) {
-            logger.error("hlen jedis failed!", e);
+            logger.error("hlen jedis failed! key = "+key, e);
             return 0;
         } finally {
             close(jedis);

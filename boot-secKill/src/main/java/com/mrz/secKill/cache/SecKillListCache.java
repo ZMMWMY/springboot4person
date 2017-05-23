@@ -26,7 +26,7 @@ public class SecKillListCache {
             throw new IllegalArgumentException("正在为您抢购中,请稍后");
         }
         push(mobile, url);
-        Message message = new Message("", new GoodMessage(mobile, url));
+        Message message = new Message("SEC_KILL_TYPE", new GoodMessage(mobile, url));
         jedisCache.rpush(message.getKey(), JSON.toJSONString(message.getContent()));
     }
 
@@ -35,7 +35,7 @@ public class SecKillListCache {
     }
 
     private boolean exist(String mobile, String url) {
-        return jedisCache.hget(getKey(url), mobile) == null;
+        return jedisCache.hget(getKey(url), mobile) != null;
     }
 
     private String getKey(String key) {
