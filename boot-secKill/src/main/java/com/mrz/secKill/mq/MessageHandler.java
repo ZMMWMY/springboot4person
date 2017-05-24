@@ -8,6 +8,7 @@ import com.mrz.secKill.cache.jedis.JedisTemplate;
 import com.mrz.secKill.common.Constant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,6 +38,9 @@ public class MessageHandler implements Runnable {
 
     @Autowired
     SuccessKillCache successKillCache;
+
+    @Autowired
+    ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     public void run(String... strings) throws Exception {
        /* jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.GOOD_STOCK_LIST, 100);
@@ -93,24 +97,27 @@ public class MessageHandler implements Runnable {
                     e.printStackTrace();
                 }
             } else {
-                //处理消息
-                GoodMessage goodMessage = (GoodMessage) message.getContent();
-                //黑名单校验
-                if (mobileBlackCache.inBlackList(goodMessage.getMobile())) {
-                    logger.error("黑名单用户");
-                    return;
-                }
-                //库存校验
-                if (!goodStockCache.stockExist(goodMessage.getUrl())) {
-                    logger.error("已经被抢完了");
-                }
-                //减少库存操作
-                if (!goodStockCache.decrStock(goodMessage.getUrl())) {
-                    //FIXME 重试
-                    logger.error("已经被抢完了");
-                }
-                //生成token存入
-                successKillCache.saveToken(goodMessage.getMobile(), goodMessage.getUrl());
+                threadPoolTaskExecutor.execute(() -> {
+                    //处理消息
+                    GoodMessage goodMessage = (GoodMessage) message.getContent();
+                    //黑名单校验
+                    if (mobileBlackCache.inBlackList(goodMessage.getMobile())) {
+                        logger.error("黑名单用户");
+                        return;
+                    }
+                    //库存校验
+                    if (!goodStockCache.stockExist(goodMessage.getUrl())) {
+                        logger.error("已经被抢完了");
+                    }
+                    //减少库存操作
+                    if (!goodStockCache.decrStock(goodMessage.getUrl())) {
+                        //FIXME 重试
+                        logger.error("已经被抢完了");
+                    }
+                    //生成token存入
+                    successKillCache.saveToken(goodMessage.getMobile(), goodMessage.getUrl());
+                });
+
             }
         }
     }
