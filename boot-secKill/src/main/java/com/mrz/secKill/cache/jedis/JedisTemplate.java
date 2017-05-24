@@ -81,8 +81,9 @@ public class JedisTemplate {
             List list = jedis.blpop(2000, key);
             if (!CollectionUtils.isEmpty(list)) {
                 String s = (String) list.get(1);
-                logger.info("***************************"+s);
-                return ConvertUtil.unserialize(s.getBytes(), clz);
+                logger.info("***************************" + s);
+                return JSON.parseObject(s, clz);
+//                return ConvertUtil.unserialize(s.getBytes(), clz);
             }
         } catch (Exception e) {
             logger.error("blpop " + key + " failed  !", e);
