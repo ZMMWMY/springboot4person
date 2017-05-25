@@ -12,6 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.Executors;
 
 /**
  * Author : MrZ
@@ -40,7 +41,7 @@ public class MessageHandler implements Runnable {
     SuccessKillCache successKillCache;
 
     @Autowired
-    ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    ThreadPoolTaskExecutor threadPoolTaskExecutor ;
 
     public void run(String... strings) throws Exception {
        /* jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.GOOD_STOCK_LIST, 100);
@@ -88,7 +89,7 @@ public class MessageHandler implements Runnable {
 
         while (true) {
             //这个问题很大啊
-            Message message = jedisCache.blpop("SEC_KILL_TYPE", Message.class);
+            GoodMessage message = jedisCache.blpop("SEC_KILL_TYPE", GoodMessage.class);
             if (message == null) {
                 logger.error("获取消息失败");
                 try {
@@ -99,23 +100,22 @@ public class MessageHandler implements Runnable {
             } else {
                 threadPoolTaskExecutor.execute(() -> {
                     //处理消息
-                    GoodMessage goodMessage = (GoodMessage) message.getContent();
                     //黑名单校验
-                    if (mobileBlackCache.inBlackList(goodMessage.getMobile())) {
+                    if (mobileBlackCache.inBlackList(message.getMobile())) {
                         logger.error("黑名单用户");
                         return;
                     }
                     //库存校验
-                    if (!goodStockCache.stockExist(goodMessage.getUrl())) {
+                    if (!goodStockCache.stockExist(message.getUrl())) {
                         logger.error("已经被抢完了");
                     }
                     //减少库存操作
-                    if (!goodStockCache.decrStock(goodMessage.getUrl())) {
+                    if (!goodStockCache.decrStock(message.getUrl())) {
                         //FIXME 重试
                         logger.error("已经被抢完了");
                     }
                     //生成token存入
-                    successKillCache.saveToken(goodMessage.getMobile(), goodMessage.getUrl());
+                    successKillCache.saveToken(message.getMobile(), message.getUrl());
                 });
 
             }

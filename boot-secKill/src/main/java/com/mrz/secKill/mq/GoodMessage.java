@@ -1,6 +1,9 @@
 package com.mrz.secKill.mq;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * Author : MrZ
@@ -9,7 +12,8 @@ import lombok.AllArgsConstructor;
  * Modified By :
  */
 @AllArgsConstructor
-public class GoodMessage {
+@NoArgsConstructor
+public class GoodMessage implements Serializable{
 
     private String mobile;
 

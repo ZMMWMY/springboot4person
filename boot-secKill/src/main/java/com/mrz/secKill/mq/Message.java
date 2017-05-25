@@ -46,4 +46,7 @@ public class Message implements Serializable{
     public void setFailNum(Integer failNum) {
         this.failNum = failNum;
     }
+
+    public Message() {
+    }
 }

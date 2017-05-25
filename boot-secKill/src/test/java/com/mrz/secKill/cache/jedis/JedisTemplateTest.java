@@ -33,7 +33,7 @@ public class JedisTemplateTest {
     @Test
     public void set() {
         jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.GOOD_STOCK_LIST, 100);
-        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.SEC_KILL_LIMIT_LIST, 100);
+//        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.SEC_KILL_LIMIT_LIST, 100);
 //        System.out.println(jedisTemplate.get("98fe8472289a52dc28140e4b799af03c"));
     }
 
