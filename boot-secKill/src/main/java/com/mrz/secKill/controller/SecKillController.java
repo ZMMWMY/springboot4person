@@ -43,9 +43,6 @@ public class SecKillController {
         return ObjectDataResponse.builder().msg("正在为您抢购").build();
     }
 
-    public static void main(String[] args) {
-        System.out.println(SecKillUtil.goodSecKill(1));
-    }
 
     /**
      * @param : [phone, md5]

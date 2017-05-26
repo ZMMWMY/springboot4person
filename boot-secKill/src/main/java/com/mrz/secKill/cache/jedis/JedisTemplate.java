@@ -48,6 +48,20 @@ public class JedisTemplate {
     }
 
 
+    public boolean exist(String key) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.exists(key);
+        } catch (Exception e) {
+            logger.error("exist " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return false;
+    }
+
+
     public long decr(String key) {
         ShardedJedis jedis = null;
         try {

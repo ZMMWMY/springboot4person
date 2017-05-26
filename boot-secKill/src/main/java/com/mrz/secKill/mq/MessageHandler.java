@@ -84,8 +84,6 @@ public class MessageHandler implements Runnable {
 
     @Override
     public void run() {
-        // 测试用
-        jedisTemplate.set("98fe8472289a52dc28140e4b799af03c" + Constant.CacheList.SEC_KILL_LIMIT_LIST, 100);
 
         while (true) {
             //这个问题很大啊

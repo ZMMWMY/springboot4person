@@ -79,7 +79,7 @@ public class JedisCache implements CacheManager {
 
     @Override
     public Boolean exists(String key) {
-        return null;
+        return jedisTemplate.exist(key);
     }
 
     @Override
