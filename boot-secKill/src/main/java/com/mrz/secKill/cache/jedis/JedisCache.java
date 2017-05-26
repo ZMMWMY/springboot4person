@@ -84,7 +84,7 @@ public class JedisCache implements CacheManager {
 
     @Override
     public void del(String key) {
-
+        jedisTemplate.del(key);
     }
 
     @Override

@@ -22,6 +22,11 @@ public class Constant {
          * 撒点盐
          */
         String SALT = "gaggfvqwtebq23fvf1fcwrv**2gvfb3c3%2fgfv";
+
+        /**
+         * 秒杀token 有效时间
+         */
+        int TOKEN_EXPIRE_SECONDS = 60 * 30;
     }
 
 

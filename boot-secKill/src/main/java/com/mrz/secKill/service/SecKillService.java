@@ -1,5 +1,8 @@
 package com.mrz.secKill.service;
 
+import com.mrz.secKill.cache.SuccessKillCache;
+import com.mrz.secKill.cache.jedis.JedisCache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,13 +13,25 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SecKillService {
+    @Autowired
+    SuccessKillCache successKillCache;
+
 
     public void secKill(String phone, String url) {
-        //校验抢购
-        //限流
 
-        //是否重复抢购
+    }
 
-        //加入消息队列
+
+    public void takeOrder(String phone, String url) {
+        //校验库存
+
+        //校验token 过期时间    如过期的话 在缓存的库存加1
+        if (successKillCache.validToken(phone, url)) {
+            //token校验通过
+
+        } else {
+
+        }
+        //生成下单表   减去数据库库存
     }
 }

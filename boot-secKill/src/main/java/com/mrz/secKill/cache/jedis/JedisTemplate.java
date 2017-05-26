@@ -61,6 +61,33 @@ public class JedisTemplate {
         return false;
     }
 
+    public void del(String key) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.hdel(key);
+        } catch (Exception e) {
+            logger.error("del " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return;
+    }
+
+
+    public void hdel(String key, String filed) {
+        ShardedJedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.hdel(key, filed);
+        } catch (Exception e) {
+            logger.error("hdel " + key + " failed  !", e);
+        } finally {
+            close(jedis);
+        }
+        return;
+    }
+
 
     public long decr(String key) {
         ShardedJedis jedis = null;

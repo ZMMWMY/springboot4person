@@ -1,8 +1,10 @@
 package com.mrz.secKill.controller;
 
+import com.mrz.secKill.cache.SuccessKillCache;
 import com.mrz.secKill.common.Constant;
 import com.mrz.secKill.response.ObjectDataResponse;
 import com.mrz.secKill.service.GoodService;
+import com.mrz.secKill.service.SecKillService;
 import com.mrz.secKill.util.SecKillUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,12 @@ import java.util.Map;
 public class SecKillController {
     @Autowired
     GoodService goodService;
+
+    @Autowired
+    SecKillService secKillService;
+
+    @Autowired
+    SuccessKillCache successKillCache;
 
     @PostMapping(value = "/{id}/{md5}/action")
     @ResponseBody
@@ -55,21 +63,22 @@ public class SecKillController {
     public Object queryResult(@RequestParam String phone,
                               @RequestParam String md5) {
 
-        return null;
+        return ObjectDataResponse.builder().body(successKillCache.queryToken(phone, md5)).build();
+
     }
 
     /**
      * @param : [phone, md5, token]
      * @return : java.lang.Object
      * @Author : Mr Z
-     * @Description : 根据token来下单
+     * @Description : 根据token来下单 ,在这里对商品数据库的库存进行操作
      * @Date 2017/5/19
      */
     @PostMapping(value = "/takeOrder")
     public Object order(@RequestParam String phone,
                         @RequestParam String md5,
                         @RequestParam String token) {
-
+        secKillService.takeOrder(phone, md5);
         return null;
     }
 

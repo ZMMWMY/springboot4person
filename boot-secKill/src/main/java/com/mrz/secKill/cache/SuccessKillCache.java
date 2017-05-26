@@ -22,12 +22,57 @@ public class SuccessKillCache {
     @Autowired
     JedisCache jedisCache;
 
+    @Autowired
+    GoodStockCache goodStockCache;
+
+    @Autowired
+    SecKillListCache secKillListCache;
+
     public void saveToken(String mobile, String url) {
         Map result = new HashMap();
         result.put("timestamp", System.currentTimeMillis());
         result.put("token", token());
         jedisCache.set(getKey(mobile, url), JSON.toJSONString(result));
     }
+
+
+    public boolean validToken(String mobile, String url) {
+        String key = getKey(mobile, url);
+
+        String temp = jedisCache.get(key);
+
+        if (temp == null) {
+
+            return false;
+        }
+        Map result = JSON.parseObject(temp, Map.class);
+        long timestamp = (long) result.get("timestamp");
+        String token = (String) result.get("token");
+        //删除token
+        jedisCache.del(key);
+
+        if (System.currentTimeMillis() - timestamp >= Constant.SystemCode.TOKEN_EXPIRE_SECONDS) {
+            //过期 加缓存中的库存
+            goodStockCache.decrStock(url);
+            //删除秒杀队列中的数据 能让他重新秒杀
+            secKillListCache.del(mobile, url);
+            return false;
+        }
+        return true;
+    }
+
+    public String queryToken(String mobile, String url) {
+        String temp = jedisCache.get(getKey(mobile, url));
+        if (temp == null) {
+            return temp;
+        }
+        Map result = JSON.parseObject(temp, Map.class);
+
+        String token = (String) result.get("token");
+
+        return token;
+    }
+
 
     private String token() {
         return UUID.randomUUID().toString();
