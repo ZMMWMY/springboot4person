@@ -28,8 +28,7 @@ public class MobileIntercept implements HandlerInterceptor {
     MobileBlackCache mobileBlackCache = (MobileBlackCache) BeanUtils.getBean("mobileBlackCache");
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        response.setCharacterEncoding("utf-8");
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {response.setCharacterEncoding("utf-8");
         String mobile = request.getParameter("mobile");
         if(null == mobile){
             Map result = new HashMap();

@@ -60,10 +60,11 @@ public class SecKillController {
      * @Date 2017/5/19
      */
     @PostMapping(value = "/query")
-    public Object queryResult(@RequestParam String phone,
+    @ResponseBody
+    public Object queryResult(@RequestParam String mobile,
                               @RequestParam String url) {
 
-        return ObjectDataResponse.builder().body(successKillCache.queryToken(phone, url)).build();
+        return ObjectDataResponse.builder().body(successKillCache.queryToken(mobile, url)).build();
 
     }
 
@@ -75,12 +76,11 @@ public class SecKillController {
      * @Date 2017/5/19
      */
     @PostMapping(value = "/takeOrder")
-    public Object order(@RequestParam String phone,
+    public Object order(@RequestParam String mobile,
                         @RequestParam String url,
-                        @RequestParam String token,
                         @RequestParam Integer id) {
-        secKillService.takeOrder(phone, url,id);
-        return null;
+        secKillService.takeOrder(mobile, url,id);
+        return ObjectDataResponse.builder().body("SUCCESS").build();
     }
 
 

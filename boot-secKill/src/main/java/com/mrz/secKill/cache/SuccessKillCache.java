@@ -3,6 +3,7 @@ package com.mrz.secKill.cache;
 import com.alibaba.fastjson.JSON;
 import com.mrz.secKill.cache.jedis.JedisCache;
 import com.mrz.secKill.common.Constant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
  * @Description Created in 17:33 on 2017/5/23.
  * Modified By :
  */
+@Slf4j
 @Component
 public class SuccessKillCache {
 
@@ -32,6 +34,7 @@ public class SuccessKillCache {
         Map result = new HashMap();
         result.put("timestamp", System.currentTimeMillis());
         result.put("token", token());
+        log.info("获取秒杀资格" + getKey(mobile, url));
         jedisCache.set(getKey(mobile, url), JSON.toJSONString(result));
     }
 
@@ -53,7 +56,7 @@ public class SuccessKillCache {
 
         if (System.currentTimeMillis() - timestamp >= Constant.SystemCode.TOKEN_EXPIRE_SECONDS) {
             //过期 加缓存中的库存
-            goodStockCache.decrStock(url);
+            goodStockCache.incrStock(url);
             //删除秒杀队列中的数据 能让他重新秒杀
             secKillListCache.del(mobile, url);
             return false;

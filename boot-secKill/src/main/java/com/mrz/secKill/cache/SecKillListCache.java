@@ -31,6 +31,7 @@ public class SecKillListCache {
         //进入秒杀队列中
         push(mobile, url);
         Message message = new Message("SEC_KILL_TYPE", new GoodMessage(mobile, url));
+        //FIXME JSON有问题   使用序列化
         jedisCache.rpush(message.getKey(), JSON.toJSONString(message.getContent()));
     }
 

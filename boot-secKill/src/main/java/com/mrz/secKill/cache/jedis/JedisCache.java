@@ -2,6 +2,7 @@ package com.mrz.secKill.cache.jedis;
 
 import com.mrz.secKill.cache.CacheManager;
 import com.mrz.secKill.common.ConvertUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.util.Set;
  * @Description Created in 13:57 on 2017/5/22.
  * Modified By :
  */
+@Slf4j
 @Component
 public class JedisCache implements CacheManager {
 
@@ -54,6 +56,7 @@ public class JedisCache implements CacheManager {
     }
 
     public void rpush(String key, String value) {
+        log.info("塞入队列"+value);
         jedisTemplate.rpush(key, value);
     }
 

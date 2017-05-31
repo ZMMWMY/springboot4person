@@ -48,6 +48,11 @@ public class GoodStockCache {
         return false;
     }
 
+    public void incrStock(String url) {
+        String key = getKey(url);
+        jedisCache.incr(key);
+    }
+
 
     public String getKey(String key) {
         return key + Constant.CacheList.GOOD_STOCK_LIST;

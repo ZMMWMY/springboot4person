@@ -46,6 +46,7 @@ public class SecKillService {
         } else {
             throw new IllegalArgumentException("");
         }
+        //FIXME 使用存储过程
         goodMapper.reduceGoodStock(id);
         //生成下单表   减去数据库库存
         Order order = new Order();
