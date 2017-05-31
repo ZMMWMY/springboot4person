@@ -43,6 +43,7 @@ public class StockTask {
                 logger.info("扫描到新增的秒杀商品" + good.getName());
                 jedisCache.set(stock, good.getStock());
                 jedisCache.set(limit, good.getStock());
+
             }
         }
         logger.info("扫描结束");

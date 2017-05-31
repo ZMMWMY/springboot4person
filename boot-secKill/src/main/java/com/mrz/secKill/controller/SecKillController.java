@@ -34,19 +34,19 @@ public class SecKillController {
     @Autowired
     SuccessKillCache successKillCache;
 
-    @PostMapping(value = "/{id}/{md5}/action")
+    @PostMapping(value = "/{id}/{url}/action")
     @ResponseBody
     public Object secKill(@PathVariable Integer id,
-                          @PathVariable String md5,
+                          @PathVariable String url,
                           @RequestParam String mobile) {
         Assert.notNull(id);
-        Assert.notNull(md5);
+        Assert.notNull(url);
         Assert.notNull(mobile);
 
-        if (!SecKillUtil.goodSecKill(id).equals(md5)) {
+        if (!SecKillUtil.goodSecKill(id).equals(url)) {
             ObjectDataResponse.builder().code(202).msg(Constant.SystemCode.DATA_EXPIRED_MSG).build();
         }
-        goodService.secKill(mobile, md5);
+        goodService.secKill(mobile, url);
 
         return ObjectDataResponse.builder().msg("正在为您抢购").build();
     }
@@ -61,9 +61,9 @@ public class SecKillController {
      */
     @PostMapping(value = "/query")
     public Object queryResult(@RequestParam String phone,
-                              @RequestParam String md5) {
+                              @RequestParam String url) {
 
-        return ObjectDataResponse.builder().body(successKillCache.queryToken(phone, md5)).build();
+        return ObjectDataResponse.builder().body(successKillCache.queryToken(phone, url)).build();
 
     }
 
@@ -76,9 +76,10 @@ public class SecKillController {
      */
     @PostMapping(value = "/takeOrder")
     public Object order(@RequestParam String phone,
-                        @RequestParam String md5,
-                        @RequestParam String token) {
-        secKillService.takeOrder(phone, md5);
+                        @RequestParam String url,
+                        @RequestParam String token,
+                        @RequestParam Integer id) {
+        secKillService.takeOrder(phone, url,id);
         return null;
     }
 

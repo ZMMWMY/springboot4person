@@ -40,6 +40,7 @@ public class RateLimiter {
 
     //获取当前流量
     public long getCurrentFlow(String key) {
+        //FIXME 限流判断的队列需要重新确定
         return jedisCache.hlen(key + Constant.CacheList.DO_SEC_KILL_LIST);
     }
 

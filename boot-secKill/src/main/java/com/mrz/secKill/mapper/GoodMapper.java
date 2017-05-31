@@ -2,6 +2,7 @@ package com.mrz.secKill.mapper;
 
 import com.mrz.secKill.model.Good;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -19,5 +20,6 @@ public interface GoodMapper {
     @Select("select id ,name , stock  , start_time,end_time from good where enable = 1 and id =#{id}")
     Good findAllGoodById(Integer id);
 
-
+    @Update("update good set stock = stock - 1 where id = #{id}")
+    void reduceGoodStock(Integer id);
 }
