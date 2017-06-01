@@ -51,7 +51,7 @@ public class SecKillService {
         //生成下单表   减去数据库库存
         Order order = new Order();
         order.setMobile(phone);
-        order.setUrl(url);
+        order.setGoodUrl(url);
         order.setCreateTime(new Date());
         orderMapper.createOrder(order);
 

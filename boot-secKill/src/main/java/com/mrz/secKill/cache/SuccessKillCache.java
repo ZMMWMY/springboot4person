@@ -51,16 +51,19 @@ public class SuccessKillCache {
         Map result = JSON.parseObject(temp, Map.class);
         long timestamp = (long) result.get("timestamp");
         String token = (String) result.get("token");
-        //删除token
-        jedisCache.del(key);
+
 
         if (System.currentTimeMillis() - timestamp >= Constant.SystemCode.TOKEN_EXPIRE_SECONDS) {
             //过期 加缓存中的库存
             goodStockCache.incrStock(url);
             //删除秒杀队列中的数据 能让他重新秒杀
             secKillListCache.del(mobile, url);
+            //删除token
+            jedisCache.del(key);
             return false;
         }
+        //删除token
+        jedisCache.del(key);
         return true;
     }
 

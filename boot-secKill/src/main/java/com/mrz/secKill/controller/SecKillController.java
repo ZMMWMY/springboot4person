@@ -76,6 +76,7 @@ public class SecKillController {
      * @Date 2017/5/19
      */
     @PostMapping(value = "/takeOrder")
+    @ResponseBody
     public Object order(@RequestParam String mobile,
                         @RequestParam String url,
                         @RequestParam Integer id) {

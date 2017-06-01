@@ -26,7 +26,7 @@ public class Constant {
         /**
          * 秒杀token 有效时间
          */
-        int TOKEN_EXPIRE_SECONDS = 60 * 30;
+        int TOKEN_EXPIRE_SECONDS = 60 * 30 * 1000;
     }
 
 

@@ -31,6 +31,24 @@ public class JedisTemplate {
     @Autowired
     private JedisConnectionFactory jedisConnectionFactory;
 
+    /**
+     * 锁超时时间，防止线程在入锁以后，无限的执行等待
+     */
+    private int expireMsecs = 60 * 1000;
+
+    /**
+     * 锁等待时间，防止线程饥饿
+     */
+    private int timeoutMsecs = 10 * 1000;
+
+    private volatile boolean locked = false;
+
+    /**
+     * Lock key path.
+     */
+    private String lockKey;
+
+
     // 获取线程
     private ShardedJedis getJedis() {
         if (shardedJedisPool == null) {
@@ -45,6 +63,47 @@ public class JedisTemplate {
             }
         }
         return shardedJedisPool.getResource();
+    }
+
+    public synchronized void release(Jedis jedis) {
+        if (locked) {
+            jedis.del(lockKey);
+        }
+        locked = false;
+    }
+
+
+    public synchronized boolean acquire(Jedis jedis) throws InterruptedException {
+        int timeout = 10000;
+        while (timeout >= 0) {
+            long expires = System.currentTimeMillis() + expireMsecs + 1;
+            String expiresStr = String.valueOf(expires); //锁到期时间
+
+            if (jedis.setnx(lockKey, expiresStr) == 1) {
+                // lock acquired
+                locked = true;
+                return true;
+            }
+
+            String currentValueStr = jedis.get(lockKey); //redis里的时间
+            if (currentValueStr != null && Long.parseLong(currentValueStr) < System.currentTimeMillis()) {
+                //判断是否为空，不为空的情况下，如果被其他线程设置了值，则第二个条件判断是过不去的
+                // lock is expired
+
+                String oldValueStr = jedis.getSet(lockKey, expiresStr);
+                //获取上一个锁到期时间，并设置现在的锁到期时间，
+                //只有一个线程才能获取上一个线上的设置时间，因为jedis.getSet是同步的
+                if (oldValueStr != null && oldValueStr.equals(currentValueStr)) {
+                    //如过这个时候，多个线程恰好都到了这里，但是只有一个线程的设置值和当前值相同，他才有权利获取锁
+                    // lock acquired
+                    locked = true;
+                    return true;
+                }
+            }
+            timeout -= 100;
+            Thread.sleep(100);
+        }
+        return false;
     }
 
 
@@ -65,7 +124,7 @@ public class JedisTemplate {
         ShardedJedis jedis = null;
         try {
             jedis = getJedis();
-            jedis.hdel(key);
+            jedis.del(key);
         } catch (Exception e) {
             logger.error("del " + key + " failed  !", e);
         } finally {
@@ -115,11 +174,12 @@ public class JedisTemplate {
         return -1;
     }
 
+
     public <T> T blpop(String key, Class<T> clz) {
         ShardedJedis jedis = null;
         try {
             jedis = getJedis();
-            List list = jedis.blpop(2000, key);
+            List list = jedis.blpop(2147483647, key);
             if (!CollectionUtils.isEmpty(list)) {
                 String s = (String) list.get(1);
                 logger.info("***************************" + s);

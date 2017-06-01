@@ -15,7 +15,7 @@ public class Order {
 
     private Integer id;
 
-    private String url;
+    private String goodUrl;
 
     private String mobile;
 

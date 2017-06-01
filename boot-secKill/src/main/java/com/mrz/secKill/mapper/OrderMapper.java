@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface OrderMapper {
 
-    @Insert("insert into order (url,mobile,create_time,enable) values(#{url},#{mobile},#{createTime},1)")
+    @Insert("insert into `order` (good_url,mobile,create_time,enable) values(#{goodUrl},#{mobile},#{createTime},1)")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void createOrder(Order order);
 
