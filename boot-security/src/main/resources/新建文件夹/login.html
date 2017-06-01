@@ -6,31 +6,7 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-<script type="text/javascript">
-    $(function(){
-        var $btn=$(".btn");
-        var username = $("#username").val();  
-        var password = $("#password").val();
-        $btn.on(
-            "click",function(){
-              
-                 $.ajax({
-                     url:"http://localhost:8081/auth",
-                     data:{'username':"zmm",'password':"123456"},
-                     dataType:"json",
-                    type:"post",
-                    success:function(data){
-                      alert(data.code)
-                       if(data.code==200){
-                           alert("登陆成功")
-                       }else{
-                           alert("登陆失败！")
-                       }
-                    }
-                  })
-        })
-    })
-</script>
+
 
 </head>
 <body>
@@ -56,7 +32,13 @@
 			</div>
 		</div>
 	</div>
-</body>
 
+<script src="login.js"></script>
+</body>
+<script type="text/javascript">
+	$(document).ready(function(){
+		login();
+	})
+</script>
 
 </html>

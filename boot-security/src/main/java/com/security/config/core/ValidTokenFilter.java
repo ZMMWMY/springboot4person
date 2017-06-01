@@ -45,9 +45,10 @@ public class ValidTokenFilter extends OncePerRequestFilter {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,X-AUTH-TOKEN");
 
         String token = request.getHeader(X_HEADER_NAME);
+        log.info("传来的token" + token);
         token = request.getParameter(X_HEADER_NAME);
         log.info("传来的token" + token);
         if (token != null /*&& !token.startsWith(X_HEADER_Head)*/) {
