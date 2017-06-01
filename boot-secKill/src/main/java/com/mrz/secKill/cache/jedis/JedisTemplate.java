@@ -159,7 +159,7 @@ public class JedisTemplate {
         }
     }
 
-    public void set(String key, Serializable value) {
+    public void set(String key, Object value) {
         ShardedJedis jedis = null;
         try {
             jedis = getJedis();
@@ -172,7 +172,7 @@ public class JedisTemplate {
     }
 
 
-    public void set(String key, Serializable value, Integer EXPIRE) {
+    public void set(String key, Object value, Integer EXPIRE) {
         ShardedJedis jedis = null;
         try {
             jedis = getJedis();

@@ -34,8 +34,8 @@ public class SuccessKillCache {
         Map result = new HashMap();
         result.put("timestamp", System.currentTimeMillis());
         result.put("token", token());
-        log.info("获取秒杀资格" + getKey(mobile, url));
-        jedisCache.set(getKey(mobile, url), JSON.toJSONString(result));
+        log.info("获取秒杀资格" + getKey(mobile, url)+"value:  "+JSON.toJSONString(result));
+        jedisCache.set(getKey(mobile, url), result);
     }
 
 
