@@ -77,8 +77,9 @@ public class JedisCache implements CacheManager {
 
     @Override
     public void set(String key, Serializable value) {
-
+        jedisTemplate.set(key, value);
     }
+
 
     public void set(String key, Object value) {
         jedisTemplate.set(key, value);

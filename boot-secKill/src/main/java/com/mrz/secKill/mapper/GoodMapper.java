@@ -1,6 +1,8 @@
 package com.mrz.secKill.mapper;
 
 import com.mrz.secKill.model.Good;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -22,4 +24,8 @@ public interface GoodMapper {
 
     @Update("update good set stock = stock - 1 where id = #{id}")
     void reduceGoodStock(Integer id);
+
+    @Insert("insert into good (name,stock) values(#{name},#{stock})")
+    @Options(useGeneratedKeys = true,keyProperty = "id")
+    void add(Good good);
 }
