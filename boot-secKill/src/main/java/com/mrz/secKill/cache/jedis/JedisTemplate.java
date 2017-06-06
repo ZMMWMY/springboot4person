@@ -179,7 +179,8 @@ public class JedisTemplate {
         ShardedJedis jedis = null;
         try {
             jedis = getJedis();
-            List list = jedis.blpop(2147483647, key);
+
+            List list =  jedis.blpop(0,key);
             if (!CollectionUtils.isEmpty(list)) {
                 String s = (String) list.get(1);
                 logger.info("***************************" + s);
