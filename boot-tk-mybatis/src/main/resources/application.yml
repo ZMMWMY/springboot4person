@@ -1,0 +1,15 @@
+
+
+
+
+mybatis:
+  type-aliases-package: com.mrz.tk.mybatis.domain
+  mapper-locations: classpath:mapper/*.xml
+mapper:
+  mappers:
+spring:
+  datasource:
+    password: xxx
+    username: root
+    url: jdbc:mysql://39.108.106.196:3306/seckill?characterEncoding=UTF-8
+    driver-class-name: com.mysql.jdbc.Driver
