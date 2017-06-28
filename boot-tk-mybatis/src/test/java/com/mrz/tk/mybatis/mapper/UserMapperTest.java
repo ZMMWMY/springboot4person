@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -26,6 +27,19 @@ public class UserMapperTest {
     public void find() {
         List<User> list = userMapper.selectAll();
         System.out.println(list.size());
+    }
+
+    @Test
+    public void findExample() {
+        User user = new User();
+        user.setUsername("123");
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("username", user.getUsername());
+        List list = userMapper.selectByExample(example);
+        System.out.println(list.size());
+
+        List list1 = userMapper.select(user);
+        System.out.println(list1.size());
     }
 
 }
