@@ -15,6 +15,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     /**
      * 注册webSocket节点,并开始socketjs,以备websocket不可用
+     * setAllowedOrigins 跨域
      *
      * @param registry
      */
